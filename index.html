@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Rick and Morty</title>
+    <title>Root Bear</title>
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
   <body class="noselect">
@@ -22,18 +22,17 @@
       </div>
     </div>
     <script>
-      var sdk;
 	  var gameInstance;
 
       const buildUrl = "Build";
       const loaderUrl = buildUrl + "/WebGL.loader.js";
       const config = {
-        dataUrl: buildUrl + "/401e73de24699576ed39675ecd240e9a.data.unityweb",
-        frameworkUrl: buildUrl + "/836d48aa7f260417286d91836e728470.js.unityweb",
-        codeUrl: buildUrl + "/ebae5d34ff7042f0f9180b680501d63e.wasm.unityweb",
+        dataUrl: buildUrl + "/3504b73988d4dd82beee17f9bcb126b3.data.unityweb",
+        frameworkUrl: buildUrl + "/86235e33653c3b71a57afa6ce2b17e39.js.unityweb",
+        codeUrl: buildUrl + "/c7ec8b65ab07df180f92041739ad5cbb.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "Rick and Morty",
+        companyName: "tinko games",
+        productName: "Root Bear",
         productVersion: "1.0",
       };
 
@@ -63,9 +62,6 @@
         }).then((unityInstance) => {
           gameInstance = unityInstance;
           loadingCover.style.display = "none";
-          console.log('Try set language: ' + sdk.environment.i18n.lang + '...')
-          gameInstance.SendMessage('YandexSDK', 'SetLanguage', sdk.environment.i18n.lang);
-          gameInstance.SendMessage('YandexSDK', 'SetDomain', sdk.environment.i18n.tld);
         }).catch((message) => {
           alert(message);
         });
