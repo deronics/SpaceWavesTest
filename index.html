@@ -22,10 +22,7 @@
       </div>
     </div>
     <script>
-      var sdk;
 	  var gameInstance;
-	  var wasUnityInited = false;
-	  var wasYandexInited = false;
 
       const buildUrl = "Build";
       const loaderUrl = buildUrl + "/WebGL.loader.js";
@@ -64,12 +61,7 @@
           progressBarFull.style.width = `${100 * progress}%`;
         }).then((unityInstance) => {
           gameInstance = unityInstance;
-		  wasUnityInited = true;
           loadingCover.style.display = "none";
-		  
-		  if (wasYandexInited)
-			gameInstance.SendMessage('YandexSDK', 'TryInitSDK');
-		
         }).catch((message) => {
           alert(message);
         });
@@ -93,190 +85,5 @@
   	    setFocus();
   	  });
     </script>
-
-    <script src="https://yandex.ru/games/sdk/v2"></script>
-  	<script>
-
-  		var player;
-  		var payments = null;
-		var lb;
-
-  		YaGames.init({
-  				screen: {
-  					fullscreen: true
-  				}
-  			})
-  			.then(ysdk => {
-  				sdk = ysdk;
-				sdk.getLeaderboards().then(_lb => lb = _lb);
-				sdk.adv.showFullscreenAdv();
-				console.log("Yandex sdk inited");
-				
-				wasYandexInited = true;
-				
-				if (wasUnityInited)
-					gameInstance.SendMessage('YandexSDK', 'TryInitSDK');
-  			});
-
-  		// Externs
-		function auth() {
-  			initPlayer().then(_player => {
-
-  				if (_player.getMode() === 'lite')
-  					userWithoutLogIn();
-  				else
-  					getUser();
-
-  			}).catch(err => {
-  				userWithoutLogIn();
-  			});
-  		}
-		
-		function getLanguage() {
-			console.log('Try set language: ' + sdk.environment.i18n.lang + '...')
-			gameInstance.SendMessage('YandexSDK', 'SetLanguage', sdk.environment.i18n.lang);
-			gameInstance.SendMessage('YandexSDK', 'SetDomain', sdk.environment.i18n.tld);
-		}
-		
-		function authClicked() {
-  			sdk.auth.openAuthDialog().then(() => {
-  					auth();
-  				}).catch(()=>{
-  					userWithoutLogIn();
-  				});
-  		}
-		
-		function initPlayer() {
-  			console.log('InitPlayerTry')
-  			return sdk.getPlayer().then(_player => {
-			
-  				player = _player;
-  				return player;
-  			});
-  		}
-		
-		function getUser() {
-  			console.log('try to get Profile Data');
-  			var data = {"id" : player.getUniqueID(), "name" : player.getName(), "avatarUrlSmall" : player.getPhoto('small'), "avatarUrlMedium" : player.getPhoto('medium'), "avatarUrlLarge" : player.getPhoto('large')};
-  			gameInstance.SendMessage('YandexSDK', 'OnAuthSucceded', JSON.stringify(data));
-  			console.log('data: ' + JSON.stringify(data));
-  			console.log('get Profile Data done');
-  		}
-
-  		function userWithoutLogIn() {
-  			console.log('user not log in');
-  			gameInstance.SendMessage('YandexSDK', 'OnAuthMissed');
-  		}
-
-  		function getUserData() {
-  			player.getData().then(stats => {
-  				gameInstance.SendMessage('YandexSDK', 'OnDataReceived', JSON.stringify(stats));
-  			});
-  		}
-
-  		function setUserData(_data) {
-  			console.log('Try Save');
-  			player.setData({
-  				data: _data
-  			}).then(() => {
-  				console.log('saved');
-  			}).catch(() => {
-  				console.log('unsaved')
-  			});
-  		}
-		
-  		function showFullscrenAd() {
-  			sdk.adv.showFullscreenAdv({
-  				callbacks: {
-  					onClose: function(wasShown) {
-  						gameInstance.SendMessage('YandexSDK', 'OnInsterstitialClose');
-  					},
-  					onError: function(error) {
-  						console.log('Error while open Fullscreen video ad:', error);
-  						gameInstance.SendMessage('YandexSDK', 'OnInsterstitialFail');
-  					}
-  				}
-  			})
-  		}
-
-  		function showRewardedAd() {
-  			sdk.adv.showRewardedVideo({
-				callbacks: {
-					onOpen: () => {},
-					onRewarded: () => {
-						gameInstance.SendMessage('YandexSDK', 'OnRewarded');
-						console.log('Rewarded!');
-					},
-					onClose: () => {
-						gameInstance.SendMessage('YandexSDK', 'OnRewardedClosed');
-						console.log('Rewarded video ad closed.');
-					},
-					onError: (e) => {
-						gameInstance.SendMessage('YandexSDK', 'OnRewardedError');
-						console.log('Error while open rewarded video ad:', e);
-					}
-				}
-			})
-  		}
-
-  		function logMessage(_data) {
-  			console.log(_data);
-  		}
-		
-		function openNewTab(_url) {
-  			var isMacLike = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
-			
-			if (isMacLike)
-				window.open(_url,"_top")
-			else
-				window.open(_url,'_blank');
-  		}
-		
-		function showRateApp() {
-  			sdk.feedback.canReview()
-				.then(({ value, reason }) => {
-					if (value) {
-						sdk.feedback.requestReview()
-							.then(({ feedbackSent }) => {
-								console.log(feedbackSent);
-							})
-					} else {
-						console.log(reason)
-					}
-				})
-  		}
-		
-		// Leaderboard
-		function setLeaderboard(score) {
-		  console.log("setting leaderboard, score: " + score);
-		  lb.setLeaderboardScore('leaderboard', score);
-		}
-		
-		function getAuthLeaderboardEntries() {
-		  lb.getLeaderboardEntries('leaderboard', { quantityTop: 5, includeUser: true })
-			.then(res => {
-			  for (i in res.entries)
-				res.entries[i].player["avatarURL"] = res.entries[i].player.getAvatarSrc("medium");
-			  gameInstance.SendMessage('YandexSDK', 'OnEntriesReady', JSON.stringify(res));
-		    });
-		}
-		
-		function getLeaderboardEntries() {
-		  lb.getLeaderboardEntries('leaderboard', { quantityTop: 5 })
-		    .then(res => {
-			  for (i in res.entries)
-				res.entries[i].player["avatarURL"] = res.entries[i].player.getAvatarSrc("medium");
-			  gameInstance.SendMessage('YandexSDK', 'OnEntriesReady', JSON.stringify(res));
-			});
-		}
-		
-		function getPlayerLeaderboard() {
-		  lb.getLeaderboardPlayerEntry('leaderboard')
-		    .then(res => {
-			  gameInstance.SendMessage('YandexSDK', 'OnPlayerLeaderboardReceive', JSON.stringify(res));
-			});
-		}
-
-  	</script>
   </body>
 </html>
