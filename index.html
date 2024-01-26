@@ -27,9 +27,9 @@
       const buildUrl = "Build";
       const loaderUrl = buildUrl + "/WebGL.loader.js";
       const config = {
-        dataUrl: buildUrl + "/f1e8d5558b20616f7ff2463e2db1c951.data.unityweb",
-        frameworkUrl: buildUrl + "/56d9ed5655e32dcc903c8937e275c949.js.unityweb",
-        codeUrl: buildUrl + "/c9e29c522a9fd6f050effbd926d30e8f.wasm.unityweb",
+        dataUrl: buildUrl + "/b4d8fe79deaf2c43662be9ea3e3d4f25.data.unityweb",
+        frameworkUrl: buildUrl + "/dde41af5ad9de8eb1515e3841da75ba4.js.unityweb",
+        codeUrl: buildUrl + "/4a5d2524333e50072786412d5884dce6.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "tinko games",
         productName: "Root Bear",
@@ -62,7 +62,6 @@
         }).then((unityInstance) => {
           gameInstance = unityInstance;
           loadingCover.style.display = "none";
-		  		
         }).catch((message) => {
           alert(message);
         });
