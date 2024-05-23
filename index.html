@@ -27,14 +27,14 @@
       const buildUrl = "Build";
       const loaderUrl = buildUrl + "/dae5c7bd2b15915f51ae4e56b8f5367d.loader.js";
       const config = {
-        dataUrl: buildUrl + "/b6ad5570a95204f35a57c60638f6021c.data.unityweb",
-        frameworkUrl: buildUrl + "/ed495bb01e6419e40493102da9aa3da6.framework.js.unityweb",
-        codeUrl: buildUrl + "/fb99f1bce3b68316a61bba383a206f7d.wasm.unityweb",
+        dataUrl: buildUrl + "/7298e46f8182a40198748f51137d57d1.data.unityweb",
+        frameworkUrl: buildUrl + "/3710028921a8fda02aac7de762641353.framework.js.unityweb",
+        codeUrl: buildUrl + "/dda53b2d628c234fe87fdc5ca358de4f.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "do.Games",
         productName: "Space Waves",
         productVersion: "1.0",
-		//matchWebGLToCanvasSize: "false"
+		matchWebGLToCanvasSize: "false"
       };
 
       const container = document.querySelector("#unity-container");
@@ -58,7 +58,7 @@
           gameInstance = unityInstance;
           loadingCover.style.display = "none";
 		  
-		  //resizeCanvas();
+		  resizeCanvas();
 		
         }).catch((message) => {
           alert(message);
@@ -81,7 +81,7 @@
   	  });
   	  window.addEventListener("resize", () => {
   	    setFocus();
-		//resizeCanvas();
+		resizeCanvas();
   	  });
 	  
 	  function resizeCanvas() {
