@@ -162,6 +162,7 @@
 	    }).catch(e => {
 		  console.error('<do.G> Error show interstitial ad: ', JSON.stringify(e));
 		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		  loadInterstitialAd();
 		});
 	  }
 	  
@@ -185,6 +186,7 @@
 		}).catch(e => {
 		  console.error('<do.G> Error show rewarded ad: ', JSON.stringify(e));
 		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		  loadRewardedAd();
 		});
 	  }
 	  
