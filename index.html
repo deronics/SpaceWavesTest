@@ -122,6 +122,7 @@
 	    $msstart.loadAdsAsync().then(adInstance => {
 		  // Use the adInstance.instanceId to make a call to showAdsAsync
 		  _interstitialAdInstance = adInstance;
+		  console.log("Interstitial ad successfully loaded!");
 	    }).catch(e => {
 		  console.error(`<do.G> Error loading interstitial ad: ${e.code}. Will retry in 20 seconds...`);
 		  setTimeout(loadInterstitialAd, 20000);
@@ -134,6 +135,7 @@
 	    $msstart.loadAdsAsync(true).then(adInstance => {
 		  // Pass in boolean true for the optional parameter isRewardedAd, to fetch Rewarded ads
 		  _rewardedAdInstance = adInstance;
+		  console.log("Rewarded ad successfully loaded!");
 	    }).catch(e => {
 		  console.error(`<do.G> Error loading rewarded ad: ${e.code}. Will retry in 20 seconds...`);
 		  setTimeout(loadRewardedAd, 20000);
