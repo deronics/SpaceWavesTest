@@ -25,11 +25,11 @@
 	  var gameInstance;
 
       const buildUrl = "Build";
-      const loaderUrl = buildUrl + "/3fd393acf6120f261945d71452edfd6d.loader.js";
+      const loaderUrl = buildUrl + "/dae5c7bd2b15915f51ae4e56b8f5367d.loader.js";
       const config = {
-        dataUrl: buildUrl + "/b547f2f4be09d5e2a05d6963d4239ced.data.br",
-        frameworkUrl: buildUrl + "/30e52ef21e25a24ac7f9c8b0f2d1ae77.framework.js.br",
-        codeUrl: buildUrl + "/d8f8470c2e5957967d46a768e2b00b34.wasm.br",
+        dataUrl: buildUrl + "/219c06dbdacd4a17d13c097810bea5d8.data.unityweb",
+        frameworkUrl: buildUrl + "/2265674a2fdf716215b3c5a4f1bab130.framework.js.unityweb",
+        codeUrl: buildUrl + "/088b0466330a304b6d99858eefc5b601.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "do.Games",
         productName: "Space Waves",
@@ -57,12 +57,50 @@
 		  console.log("<do.G> Unity inited");
           gameInstance = unityInstance;
           loadingCover.style.display = "none";
+		  
+		  resizeCanvas();
 		
         }).catch((message) => {
           alert(message);
         });
       };
       document.body.appendChild(script);
+	  
+	  // Focus
+  	  function setFocus() {
+  	    container.focus();
+  		window.focus();
+  		canvas.focus();
+  	  }
+
+  	  window.addEventListener("touchstart", () => {
+  	    setFocus();
+  	  });
+  	  window.addEventListener("pointerdown", () => {
+  	    setFocus();
+  	  });
+  	  window.addEventListener("resize", () => {
+  	    setFocus();
+		resizeCanvas();
+  	  });
+	  
+	  function resizeCanvas() {
+		var pixelRatio = window.devicePixelRatio || 1;
+		var width = canvas.clientWidth * pixelRatio;
+		var height = canvas.clientHeight * pixelRatio;
+			
+		if (canvas.width != width || canvas.height != height) {
+			if (height > 1080) {
+				canvas.width = Math.floor(width / height * 1080);
+				canvas.height = 1080;
+			}
+			else
+			{
+				canvas.width = width;
+				canvas.height = height;
+			}
+		}
+	  }
     </script>
 	
 	<script src="https://assets.msn.com/staticsb/statics/latest/msstart-games-sdk/msstart-v1.0.0-rc.13.min.js"></script>
