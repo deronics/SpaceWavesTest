@@ -152,18 +152,19 @@
 		
           // Use the adInstance.showAdsCompletedAsync to be notified of the completion of showing the advertisement
 		  adInstance.showAdsCompletedAsync.then(() => {
-		    loadInterstitialAd();
   		    gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdClose');
   		  }).catch(e => {
 		    console.error('<do.G> Error interstitial showAdsCompletedAsync: ', JSON.stringify(e));
 		    gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
-		  });
+		  }).finally(() => {
+		    loadInterstitialAd();
+	    	  });
 		  
 	    }).catch(e => {
 		  console.error('<do.G> Error show interstitial ad: ', JSON.stringify(e));
 		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
 		  loadInterstitialAd();
-		});
+	    });
 	  }
 	  
 	  function showRewardedAd() {
@@ -176,11 +177,12 @@
 		  
           // Use the adInstance.showAdsCompletedAsync to be notified of the completion of showing the advertisement
 		  adInstance.showAdsCompletedAsync.then(() => {
-		    loadInterstitialAd();
   		    gameInstance.SendMessage('MSStartSDK', 'OnReward');
   		  }).catch(e => {
 		    console.error('<do.G> Error rewarded showAdsCompletedAsync: ', JSON.stringify(e));
 		    gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		  }).finally(() => {
+		    loadRewardedAd();
 		  });
 		  
 		}).catch(e => {
