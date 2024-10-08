@@ -27,9 +27,9 @@
       const buildUrl = "Build";
       const loaderUrl = buildUrl + "/dae5c7bd2b15915f51ae4e56b8f5367d.loader.js";
       const config = {
-        dataUrl: buildUrl + "/4d85dab1b676ac6921c2ab1fa1dae9b2.data.unityweb",
-        frameworkUrl: buildUrl + "/887e48d20fa69d6846a6720c13307650.framework.js.unityweb",
-        codeUrl: buildUrl + "/3d68bc3b512215d44e003075991409e8.wasm.unityweb",
+        dataUrl: buildUrl + "/b63806ce9d8e4db69f5bbf3a4989e6c8.data.unityweb",
+        frameworkUrl: buildUrl + "/2cf21f4a1a4c1ce948852c99f146fe4d.framework.js.unityweb",
+        codeUrl: buildUrl + "/171d39e0fa45338ee04fc0b5368a8b9d.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "do.Games",
         productName: "Space Waves",
@@ -59,6 +59,7 @@
           loadingCover.style.display = "none";
 		  
 		  resizeCanvas();
+		  loadAds();
 		
         }).catch((message) => {
           alert(message);
@@ -121,7 +122,6 @@
 	    $msstart.loadAdsAsync().then(adInstance => {
 		  // Use the adInstance.instanceId to make a call to showAdsAsync
 		  _interstitialAdInstance = adInstance;
-		  console.log("Interstitial ad successfully loaded!");
 	    }).catch(e => {
 		  console.error(`<do.G> Error loading interstitial ad: ${e.code}. Will retry in 20 seconds...`);
 		  setTimeout(loadInterstitialAd, 20000);
@@ -134,7 +134,6 @@
 	    $msstart.loadAdsAsync(true).then(adInstance => {
 		  // Pass in boolean true for the optional parameter isRewardedAd, to fetch Rewarded ads
 		  _rewardedAdInstance = adInstance;
-		  console.log("Rewarded ad successfully loaded!");
 	    }).catch(e => {
 		  console.error(`<do.G> Error loading rewarded ad: ${e.code}. Will retry in 20 seconds...`);
 		  setTimeout(loadRewardedAd, 20000);
