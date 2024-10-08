@@ -124,7 +124,7 @@
 		  _interstitialAdInstance = adInstance;
 		  console.log("Interstitial ad successfully loaded!");
 	    }).catch(e => {
-		  console.error(`<do.G> Error loading interstitial ad: ${e.code}. Will retry in 20 seconds...`);
+		  console.error(`<do.G> Error loading interstitial ad: ${JSON.stringify(e)}. Will retry in 20 seconds...`);
 		  setTimeout(loadInterstitialAd, 20000);
 		});
 	  }
@@ -137,7 +137,7 @@
 		  _rewardedAdInstance = adInstance;
 		  console.log("Rewarded ad successfully loaded!");
 	    }).catch(e => {
-		  console.error(`<do.G> Error loading rewarded ad: ${e.code}. Will retry in 20 seconds...`);
+		  console.error(`<do.G> Error loading rewarded ad: ${JSON.stringify(e)}. Will retry in 20 seconds...`);
 		  setTimeout(loadRewardedAd, 20000);
 		});
 	  }
@@ -155,12 +155,12 @@
 		    loadInterstitialAd();
   		    gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdClose');
   		  }).catch(e => {
-		    console.error('<do.G> Error interstitial showAdsCompletedAsync: ', e.code);
+		    console.error('<do.G> Error interstitial showAdsCompletedAsync: ', JSON.stringify(e));
 		    gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
 		  });
 		  
 	    }).catch(e => {
-		  console.error('<do.G> Error show interstitial ad: ', e.code);
+		  console.error('<do.G> Error show interstitial ad: ', JSON.stringify(e));
 		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
 		});
 	  }
@@ -178,12 +178,12 @@
 		    loadInterstitialAd();
   		    gameInstance.SendMessage('MSStartSDK', 'OnReward');
   		  }).catch(e => {
-		    console.error('<do.G> Error rewarded showAdsCompletedAsync: ', e.code);
+		    console.error('<do.G> Error rewarded showAdsCompletedAsync: ', JSON.stringify(e));
 		    gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
 		  });
 		  
 		}).catch(e => {
-		  console.error('<do.G> Error show rewarded ad: ', e.code);
+		  console.error('<do.G> Error show rewarded ad: ', JSON.stringify(e));
 		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
 		});
 	  }
