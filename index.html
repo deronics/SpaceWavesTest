@@ -27,9 +27,9 @@
       const buildUrl = "Build";
       const loaderUrl = buildUrl + "/dae5c7bd2b15915f51ae4e56b8f5367d.loader.js";
       const config = {
-        dataUrl: buildUrl + "/219c06dbdacd4a17d13c097810bea5d8.data.unityweb",
-        frameworkUrl: buildUrl + "/2265674a2fdf716215b3c5a4f1bab130.framework.js.unityweb",
-        codeUrl: buildUrl + "/088b0466330a304b6d99858eefc5b601.wasm.unityweb",
+        dataUrl: buildUrl + "/b63806ce9d8e4db69f5bbf3a4989e6c8.data.unityweb",
+        frameworkUrl: buildUrl + "/2cf21f4a1a4c1ce948852c99f146fe4d.framework.js.unityweb",
+        codeUrl: buildUrl + "/171d39e0fa45338ee04fc0b5368a8b9d.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "do.Games",
         productName: "Space Waves",
@@ -59,6 +59,7 @@
           loadingCover.style.display = "none";
 		  
 		  resizeCanvas();
+		  loadAds();
 		
         }).catch((message) => {
           alert(message);
@@ -121,8 +122,9 @@
 	    $msstart.loadAdsAsync().then(adInstance => {
 		  // Use the adInstance.instanceId to make a call to showAdsAsync
 		  _interstitialAdInstance = adInstance;
+		  console.log("Interstitial ad successfully loaded!");
 	    }).catch(e => {
-		  console.error(`<do.G> Error loading interstitial ad: ${e.code}. Will retry in 20 seconds...`);
+		  console.error(`<do.G> Error loading interstitial ad: ${JSON.stringify(e)}. Will retry in 20 seconds...`);
 		  setTimeout(loadInterstitialAd, 20000);
 		});
 	  }
@@ -133,8 +135,9 @@
 	    $msstart.loadAdsAsync(true).then(adInstance => {
 		  // Pass in boolean true for the optional parameter isRewardedAd, to fetch Rewarded ads
 		  _rewardedAdInstance = adInstance;
+		  console.log("Rewarded ad successfully loaded!");
 	    }).catch(e => {
-		  console.error(`<do.G> Error loading rewarded ad: ${e.code}. Will retry in 20 seconds...`);
+		  console.error(`<do.G> Error loading rewarded ad: ${JSON.stringify(e)}. Will retry in 20 seconds...`);
 		  setTimeout(loadRewardedAd, 20000);
 		});
 	  }
@@ -149,16 +152,18 @@
 		
           // Use the adInstance.showAdsCompletedAsync to be notified of the completion of showing the advertisement
 		  adInstance.showAdsCompletedAsync.then(() => {
-		    loadInterstitialAd();
   		    gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdClose');
   		  }).catch(e => {
-		    console.error('<do.G> Error interstitial showAdsCompletedAsync: ', e.code);
+		    console.error('<do.G> Error interstitial showAdsCompletedAsync: ', JSON.stringify(e));
 		    gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		  }).finally(() => {
+		    loadInterstitialAd();
 		  });
 		  
 	    }).catch(e => {
-		  console.error('<do.G> Error show interstitial ad: ', e.code);
+		  console.error('<do.G> Error show interstitial ad: ', JSON.stringify(e));
 		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		  loadInterstitialAd();
 		});
 	  }
 	  
@@ -172,16 +177,18 @@
 		  
           // Use the adInstance.showAdsCompletedAsync to be notified of the completion of showing the advertisement
 		  adInstance.showAdsCompletedAsync.then(() => {
-		    loadInterstitialAd();
   		    gameInstance.SendMessage('MSStartSDK', 'OnReward');
   		  }).catch(e => {
-		    console.error('<do.G> Error rewarded showAdsCompletedAsync: ', e.code);
+		    console.error('<do.G> Error rewarded showAdsCompletedAsync: ', JSON.stringify(e));
 		    gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		  }).finally(() => {
+		    loadRewardedAd();
 		  });
 		  
 		}).catch(e => {
-		  console.error('<do.G> Error show rewarded ad: ', e.code);
+		  console.error('<do.G> Error show rewarded ad: ', JSON.stringify(e));
 		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		  loadRewardedAd();
 		});
 	  }
 	  
