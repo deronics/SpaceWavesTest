@@ -151,23 +151,29 @@
 		  return;
 		}
 	  
-	    $msstart.showAdsAsync(_interstitialAdInstance.instanceId).then(adInstance => {
+	    try {
+	      $msstart.showAdsAsync(_interstitialAdInstance.instanceId).then(adInstance => {
 		
-          // Use the adInstance.showAdsCompletedAsync to be notified of the completion of showing the advertisement
-		  adInstance.showAdsCompletedAsync.then(() => {
-  		    gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdClose');
-  		  }).catch(e => {
-		    console.error('<do.G> Error interstitial showAdsCompletedAsync: ', JSON.stringify(e));
+            // Use the adInstance.showAdsCompletedAsync to be notified of the completion of showing the advertisement
+		    adInstance.showAdsCompletedAsync.then(() => {
+  		      gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdClose');
+  		    }).catch(e => {
+		      console.error('<do.G> Error interstitial showAdsCompletedAsync: ', JSON.stringify(e));
+		      gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		    }).finally(() => {
+		      loadInterstitialAd();
+		    });
+		  
+	      }).catch(e => {
+		    console.error('<do.G> Error show interstitial ad: ', JSON.stringify(e));
 		    gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
-		  }).finally(() => {
 		    loadInterstitialAd();
 		  });
-		  
-	    }).catch(e => {
-		  console.error('<do.G> Error show interstitial ad: ', JSON.stringify(e));
+		} catch (e) {
+          console.error('<do.G> Error show interstitial ad: ', e.message);
 		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
 		  loadInterstitialAd();
-		});
+        }
 	  }
 	  
 	  function showRewardedAd() {
@@ -176,23 +182,29 @@
 		  return;
 		}
 		
-		$msstart.showAdsAsync(_rewardedAdInstance.instanceId).then(adInstance => {
+		try {
+		  $msstart.showAdsAsync(_rewardedAdInstance.instanceId).then(adInstance => {
 		  
-          // Use the adInstance.showAdsCompletedAsync to be notified of the completion of showing the advertisement
-		  adInstance.showAdsCompletedAsync.then(() => {
-  		    gameInstance.SendMessage('MSStartSDK', 'OnReward');
-  		  }).catch(e => {
-		    console.error('<do.G> Error rewarded showAdsCompletedAsync: ', JSON.stringify(e));
+            // Use the adInstance.showAdsCompletedAsync to be notified of the completion of showing the advertisement
+		    adInstance.showAdsCompletedAsync.then(() => {
+  		      gameInstance.SendMessage('MSStartSDK', 'OnReward');
+  		    }).catch(e => {
+		      console.error('<do.G> Error rewarded showAdsCompletedAsync: ', JSON.stringify(e));
+		      gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		    }).finally(() => {
+		      loadRewardedAd();
+		    });
+		  
+		  }).catch(e => {
+		    console.error('<do.G> Error show rewarded ad: ', JSON.stringify(e));
 		    gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
-		  }).finally(() => {
 		    loadRewardedAd();
 		  });
-		  
-		}).catch(e => {
-		  console.error('<do.G> Error show rewarded ad: ', JSON.stringify(e));
+		} catch (e) {
+          console.error('<do.G> Error show interstitial ad: ', e.message);
 		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
 		  loadRewardedAd();
-		});
+        }
 	  }
 	  
 	</script>
