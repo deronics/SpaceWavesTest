@@ -176,12 +176,6 @@
 		    loadInterstitialAd();
           }
 		}
-		else
-		{
-		  console.error('<do.G> Error show interstitial ad!');
-		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
-		  loadInterstitialAd();
-		}
 	  }
 	  
 	  async function showRewardedAd() {
@@ -210,12 +204,6 @@
 		    gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
 		    loadRewardedAd();
           }
-		}
-		else
-		{
-		  console.error('<do.G> Error show rewarded ad!');
-		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
-		  loadRewardedAd();
 		}
 	  }
 	  
