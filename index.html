@@ -159,7 +159,7 @@
 		try {
 		  t = await $msstart.showAdsAsync(_interstitialAdInstance.instanceId);
 		} catch (e) {
-		  console.error('<do.G> Error show interstitial ad: ', e.message);
+		  console.error('<do.G> Error show interstitial ad: ', e);
 		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
 		  loadInterstitialAd();
 		}
@@ -170,7 +170,7 @@
 			gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdClose');
 			loadInterstitialAd();
 		  } catch (e) {
-            console.error('<do.G> Error interstitial showAdsCompletedAsync: ', e.message);
+            console.error('<do.G> Error interstitial showAdsCompletedAsync: ', e);
 		    gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
 		    loadInterstitialAd();
           }
@@ -194,7 +194,7 @@
 		try {
 		  t = await $msstart.showAdsAsync(_rewardedAdInstance.instanceId);
 		} catch (e) {
-		  console.error('<do.G> Error show rewarded ad: ', e.message);
+		  console.error('<do.G> Error show rewarded ad: ', e);
 		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
 		  loadRewardedAd();
 		}
@@ -205,7 +205,7 @@
 			gameInstance.SendMessage('MSStartSDK', 'OnReward');
 			loadRewardedAd();
 		  } catch (e) {
-            console.error('<do.G> Error rewarded showAdsCompletedAsync: ', e.message);
+            console.error('<do.G> Error rewarded showAdsCompletedAsync: ', e);
 		    gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
 		    loadRewardedAd();
           }
