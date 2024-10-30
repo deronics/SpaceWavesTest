@@ -153,7 +153,9 @@
 		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
 		  return;
 		}
-		
+		  
+		let t;
+		  
 		try {
 		  t = await $msstart.showAdsAsync(_interstitialAdInstance.instanceId);
 		} catch (e) {
@@ -186,7 +188,9 @@
 		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
 		  return;
 		}
-		
+		  
+		let t;
+		  
 		try {
 		  t = await $msstart.showAdsAsync(_rewardedAdInstance.instanceId);
 		} catch (e) {
