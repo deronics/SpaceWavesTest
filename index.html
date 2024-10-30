@@ -121,31 +121,27 @@
 	  function loadInterstitialAd() {
 	    _interstitialAdInstance = null;
 		
-		try {
-	      $msstart.loadAdsAsync().then(adInstance => {
-		    // Use the adInstance.instanceId to make a call to showAdsAsync
-		    _interstitialAdInstance = adInstance;
-		    console.log("Interstitial ad successfully loaded!");
-	      });
-		} catch (e) {
-          console.error('<do.G> Error loading interstitial ad. Will retry in 20 seconds...', e);
+		$msstart.loadAdsAsync().then(adInstance => {
+		  // Use the adInstance.instanceId to make a call to showAdsAsync
+		  _interstitialAdInstance = adInstance;
+		  console.log("Interstitial ad successfully loaded!");
+	    }).catch(e => {
+		  console.error('<do.G> Error loading interstitial ad. Will retry in 20 seconds...', e);
 		  setTimeout(loadInterstitialAd, 20000);
-        }
+		});
 	  }
 	  
 	  function loadRewardedAd() {
 	    _rewardedAdInstance = null;
 		
-		try {
-	      $msstart.loadAdsAsync(true).then(adInstance => {
-		    // Pass in boolean true for the optional parameter isRewardedAd, to fetch Rewarded ads
-		    _rewardedAdInstance = adInstance;
-		    console.log("Rewarded ad successfully loaded!");
-	      });
-		} catch (e) {
-          console.error('<do.G> Error loading rewarded ad. Will retry in 20 seconds...', e);
+		$msstart.loadAdsAsync(true).then(adInstance => {
+		  // Pass in boolean true for the optional parameter isRewardedAd, to fetch Rewarded ads
+		  _rewardedAdInstance = adInstance;
+		  console.log("Rewarded ad successfully loaded!");
+	    }).catch(e => {
+		  console.error('<do.G> Error loading rewarded ad. Will retry in 20 seconds...', e);
 		  setTimeout(loadRewardedAd, 20000);
-        }
+		});
 	  }
 	  
 	  async function showInterstitialAd() {
