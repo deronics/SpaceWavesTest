@@ -162,6 +162,7 @@
 		  console.error('<do.G> Error show interstitial ad: ', e);
 		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
 		  loadInterstitialAd();
+		  return;
 		}
 		
 		if (t) {
