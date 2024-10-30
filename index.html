@@ -148,7 +148,7 @@
         }
 	  }
 	  
-	  function showInterstitialAd() {
+	  async showInterstitialAd() {
 	    if (_interstitialAdInstance == null) {
 		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
 		  return;
@@ -181,7 +181,7 @@
 		}
 	  }
 	  
-	  function showRewardedAd() {
+	  async showRewardedAd() {
 	    if (_rewardedAdInstance == null) {
 		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
 		  return;
