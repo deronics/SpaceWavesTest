@@ -45,8 +45,8 @@
         streamingAssetsUrl: "StreamingAssets",
         companyName: "do.Games",
         productName: "Space Waves",
-        productVersion: "1.0-ms",
-		matchWebGLToCanvasSize: "false"
+        productVersion: "1.0-ms"
+	//matchWebGLToCanvasSize: "false"
       };
 	  
       loadingCover.style.display = "";
@@ -63,7 +63,7 @@
 		  console.log("<do.G> Unity inited");
           gameInstance = unityInstance;
           loadingCover.style.display = "none";
-		  resizeCanvas();
+		  //resizeCanvas();
 		  loadAds();
         }).catch((message) => {
           alert(message);
@@ -86,10 +86,11 @@
   	  });
   	  window.addEventListener("resize", () => {
   	    setFocus();
-		resizeCanvas();
+		//resizeCanvas();
   	  });
 	  
 	  function resizeCanvas() {
+		  /*
 		var pixelRatio = window.devicePixelRatio || 1;
 		var width = canvas.clientWidth * pixelRatio;
 		var height = canvas.clientHeight * pixelRatio;
@@ -105,6 +106,7 @@
 				canvas.height = height;
 			}
 		}
+  		*/
 	  }
     </script>
 	
