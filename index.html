@@ -49,6 +49,7 @@
       const script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
+	getLocalStorageData();
         createUnityInstance(canvas, config, (progress) => {
           spinner.style.display = "none";
           progressBarEmpty.style.display = "";
@@ -84,6 +85,11 @@
 	  function setFullscreen() {
 	    gameInstance.SetFullscreen(1);
 	  }
+	
+	function getLocalStorageData() {
+	  const playerDataString = localStorage.getItem("USER_DATA");
+	  console.log(playerDataString);
+	}
     </script>
   </body>
 </html>
