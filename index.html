@@ -23,9 +23,9 @@
     </div>
 	  
     <script>
-      window.onload = () => {
-        console.log(JSON.stringify(getPlayerPrefsUnity()));
-      };
+      window.addEventListener("load", () => {
+  	console.log(JSON.stringify(getPlayerPrefsUnity(), null, "\t"));
+      });
     </script>
 	  
     <script>
