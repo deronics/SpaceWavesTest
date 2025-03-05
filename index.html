@@ -112,9 +112,7 @@
 		    const result = e.target.result;
 	            if (result) {
 	              var s = result.value;
-		      console.log(result.key + " contents=" + (s.contents ? s.contents.length : "none"));
-		      if (result.key.includes("KLHJGJHEJFKJL")) {
-		        //console.log(parsePlayerPrefsBinary(s.contents));
+		      if (result.key.includes("PlayerPrefs")) {
 			resolve(parsePlayerPrefsBinary(s.contents));
 		      }
 	              result['continue']();
