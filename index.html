@@ -104,7 +104,7 @@
 
 		     if (event.target.result.key.includes("PlayerPrefs")) {
 		       //const text = new TextDecoder("utf-8").decode(s.contents);
-		       const result = parsePlayerPrefsBinary(s.contents);
+		       const result = JSON.stringify(parsePlayerPrefsBinary(s.contents), null, "\t");
 		       console.log(result);
 		     }
 			
