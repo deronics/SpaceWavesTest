@@ -103,14 +103,12 @@
 	            console.log(event.target.result.key + " contents=" + (s.contents ? s.contents.length : "none"));
 
 		     if (event.target.result.key.includes("PlayerPrefs")) {
-		       const arrayBuffer = s.data;
-		       const text = new TextDecoder().decode(arrayBuffer);
+		       const text = new TextDecoder("utf-8").decode(s.contents);
 		       try {
 		          const json = JSON.parse(text);
 		          console.log("PlayerPrefs:", json);
 		        } catch (e) {
 		          console.warn("Не удалось распарсить JSON", text);
-			  console.log(s.data);
 			}
 		     }
 			
