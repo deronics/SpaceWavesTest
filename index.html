@@ -85,19 +85,31 @@
 	    gameInstance.SetFullscreen(1);
 	  }
 	
-	function getLocalStorageData() {
-	  console.log("<START>");
-	  Object.entries(localStorage)
-	    .filter(([key]) => key.startsWith("playerPrefs."))
-	    .forEach(([key, value]) => console.log(key, value));
-	  console.log("<END>");
-	}
+	  async function getPlayerPrefs() {
+  const dbRequest = indexedDB.open("UnityPlayerPrefs");
+  
+  dbRequest.onsuccess = async (event) => {
+    const db = event.target.result;
+    const transaction = db.transaction(["PlayerPrefs"], "readonly");
+    const store = transaction.objectStore("PlayerPrefs");
+    const cursor = store.openCursor();
 
-	const originalSetItem = localStorage.setItem;
-	localStorage.setItem = function (key, value) {
-	  console.log("PlayerPrefs changed:", key, value);
-	  originalSetItem.apply(this, arguments);
-	};
+    cursor.onsuccess = (e) => {
+      const result = e.target.result;
+      if (result) {
+        console.log(result.key, result.value);
+        result.continue();
+      }
+    };
+  };
+
+  dbRequest.onerror = () => {
+    console.error("Не удалось открыть базу данных");
+  };
+}
+
+getPlayerPrefs();
+
 
     </script>
   </body>
