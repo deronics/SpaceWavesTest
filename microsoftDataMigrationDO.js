@@ -109,36 +109,20 @@ function microsoftMigration() {
         // For production, replace the following with a proper check.
         return currentOrigin.indexOf("cdn.start.gg") !== -1;
     }
-
-    function getCookie(key) {
-        const cookies = document.cookie.split(/;\s*/);
-        for (const cookie of cookies) {
-            const [cookieKey, cookieValue] = cookie.split("=");
-            if (cookieKey === key) {
-                return cookieValue;
-            }
-        }
-        return null;
-    }
-	
-	function getLocalstorageEntry(key) {
-		
-        return localStorage.getItem(key);
-    }
 	
 	function getResponse(eMsg) {
 		const data = eMsg.data;
 		console.log("Migration: fetchIndexedDB on old domain");
 		const items = getPlayerPrefsUnity();
 		if (items === null) {
-			return { response: "error", value: null };
+			return { response: "error", value: null, id: data.id ?? -1 };
 		} else {
-			return { response: "playerPrefs", value: items };
+			return { response: "playerPrefs", value: items, id: data.id ?? -1 };
 		}
 	}
 	
 	
-	function getPlayerPrefsUnity()
+	function getPlayerPrefsUnity() {
 		getPlayerPrefsUnityIndexedDB().then((result) => {
 			const items = result.items.map(({ key, value }) => ({ [key]: value }));
 			
