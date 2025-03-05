@@ -45,11 +45,11 @@
       const spinner = document.querySelector('.spinner');
 	  
       loadingCover.style.display = "";
+      getLocalStorageData();
 
       const script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
-	getLocalStorageData();
         createUnityInstance(canvas, config, (progress) => {
           spinner.style.display = "none";
           progressBarEmpty.style.display = "";
