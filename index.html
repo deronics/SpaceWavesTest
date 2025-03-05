@@ -23,6 +23,7 @@
     </div>
 	  
     <script>
+      console.log(window.location.origin);
       window.onload = () => {
         getPlayerPrefsUnity().then((result) => {
 	  const items = result.items.map(({ key, value }) => ({ [key]: value }));
