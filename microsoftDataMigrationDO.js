@@ -8,6 +8,7 @@ const objectStoreName = 'FILE_DATA';
 function microsoftMigration() {
     // Get current origin
     const currentOrigin = window.location.origin;
+    const currentHref = window.location.href;
     window["oldDomain"] = oldDomain;
 
     // List of allowed origins that can request data from this provider.
@@ -16,7 +17,7 @@ function microsoftMigration() {
     ];
 
     // PROVIDER MODE: Running on the old domain
-    if (currentOrigin.indexOf("cdn.start.gg") !== -1) {
+    if (currentHref.indexOf("SpaceWavesTest") !== -1) {
         console.log("Migration: Started on old domain");
 
         // Listen for migration requests and respond
@@ -32,7 +33,7 @@ function microsoftMigration() {
         });
     }
     // FETCHER MODE: Running on the new domain
-    else if (currentOrigin.indexOf("deronics.github") !== -1) {
+    else if (currentHref.indexOf("SpaceWavesTest2") !== -1) {
         console.log("Migration: Started on new domain");
 
         // Expose functions globally so your game can request data
