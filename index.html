@@ -21,6 +21,13 @@
         <div class="spinner"></div>
       </div>
     </div>
+	  
+    <script>
+      window.onload = () => {
+        console.log(JSON.stringify(getPlayerPrefsUnity()));
+      };
+    </script>
+	  
     <script>
 	  var gameInstance;
 
@@ -63,7 +70,6 @@
         });
       };
       document.body.appendChild(script);
-      console.log(JSON.stringify(getPlayerPrefsUnity()));
 
       // Focus
   	  function setFocus() {
