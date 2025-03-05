@@ -23,7 +23,9 @@
     </div>
 	  
     <script>
-
+      window.onload = () => {
+        getPlayerPrefsUnity();
+      };
     </script>
 	  
     <script>
@@ -62,8 +64,6 @@
 		  console.log("<do.G> Unity inited");
           gameInstance = unityInstance;
           loadingCover.style.display = "none";
-	  //console.log(JSON.stringify(getPlayerPrefsUnity(), null, "\t"));
-	  getPlayerPrefsUnity();
 		
         }).catch((message) => {
           alert(message);
@@ -108,7 +108,7 @@
 	            var s = e.target.result.value;
 		    console.log(e.target.result.key + " contents=" + (s.contents ? s.contents.length : "none"));
 		     if (e.target.result.key.includes("PlayerPrefs")) {
-		       console.log(parsePlayerPrefsBinary(s.contents), null, "\t");
+		       console.log(parsePlayerPrefsBinary(s.contents));
 		     }
 			
 	            e.target.result['continue']();
