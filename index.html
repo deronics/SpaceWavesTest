@@ -88,9 +88,9 @@
 	
 	function getLocalStorageData() {
 	  console.log("<START>");
-	  for (let i = 0; i < localStorage.length; i++) {
-            console.log(localStorage.key(i), localStorage.getItem(localStorage.key(i)));
-          }
+	  Object.entries(localStorage)
+	    .filter(([key]) => key.startsWith("playerPrefs."))
+	    .forEach(([key, value]) => console.log(key, value));
 	  console.log("<END>");
 	}
     </script>
