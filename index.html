@@ -106,6 +106,12 @@
 	  	dbRequest.onsuccess = (event) => {
 	    	  const db = event.target.result;
 	    	  const objectStoreName = 'FILE_DATA';
+		  
+		  if (!db.objectStoreNames.contains(objectStoreName)) {
+		    reject(`Object store "${objectStoreName}" does not exist.`);
+		    return;
+		  }
+		  
 	    	  const transaction = db.transaction(objectStoreName, "readonly");
 	    	  const store = transaction.objectStore(objectStoreName);
 	    	  const cursor = store.openCursor();
