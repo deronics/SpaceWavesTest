@@ -118,6 +118,7 @@ function microsoftMigration() {
 		if (items === null) {
 			return { response: "error", value: null, id: data.id ?? -1 };
 		} else {
+			console.log(JSON.stringify(items, null, 2));
 			return { response: "playerPrefs", value: items, id: data.id ?? -1 };
 		}
 	}
