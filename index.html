@@ -24,7 +24,11 @@
 	  
     <script>
       window.onload = () => {
-        getPlayerPrefsUnity();
+        getPlayerPrefsUnity().then((result) => {
+	  console.log(result);
+	}).catch((error) => {
+	  console.error("Get data error!: ", error);
+	});
       };
     </script>
 	  
@@ -92,33 +96,43 @@
 	    gameInstance.SetFullscreen(1);
 	  }
 	
-	  async function getPlayerPrefsUnity() {
-	  const dbRequest = indexedDB.open("/idbfs");
+	  function getPlayerPrefsUnity() {
+	    return new Promise((resolve, reject) => {
+	      try {
+		const dbRequest = indexedDB.open("/idbfs");
 	
-	  dbRequest.onsuccess = (event) => {
-	    const db = event.target.result;
-	    const objectStoreName = 'FILE_DATA';
-	    const transaction = db.transaction(objectStoreName, "readonly");
-	    const store = transaction.objectStore(objectStoreName);
-	    const cursor = store.openCursor();
+	  	dbRequest.onsuccess = (event) => {
+	    	  const db = event.target.result;
+	    	  const objectStoreName = 'FILE_DATA';
+	    	  const transaction = db.transaction(objectStoreName, "readonly");
+	    	  const store = transaction.objectStore(objectStoreName);
+	    	  const cursor = store.openCursor();
 	
-	    cursor.onsuccess = function (e) {
-	        if (e.target.result) {
-	          
-	            var s = e.target.result.value;
-		    console.log(e.target.result.key + " contents=" + (s.contents ? s.contents.length : "none"));
-		     if (e.target.result.key.includes("PlayerPrefs")) {
-		       console.log(parsePlayerPrefsBinary(s.contents));
-		     }
-			
-	            e.target.result['continue']();
-	        }
-	    };
-	  };
+	    	  cursor.onsuccess = function (e) {
+		    const result = e.target.result;
+	            if (result) {
+	              var s = result.value;
+		      console.log(result.key + " contents=" + (s.contents ? s.contents.length : "none"));
+		      if (result.key.includes("PlayerPrefs")) {
+		        //console.log(parsePlayerPrefsBinary(s.contents));
+			resolve(parsePlayerPrefsBinary(s.contents));
+		      }
+	              result['continue']();
+	            } else {
+		      reject("No data with this key!");
+		    }
+		    reject("No PlayerPrefs KEY!");
+	    	  };
+		};
 	
-	  dbRequest.onerror = () => {
-	    console.error("Не удалось открыть IndexedDB UnityCache");
-	  };
+	  	dbRequest.onerror = () => {
+	    	  reject("Error while iterating through records in IndexedDB");
+	  	};
+	      }
+	      catch (err) {
+		reject("Error parse IndexedDB: " + err);
+	      }
+	  }
 	}
 
 	function parsePlayerPrefsBinary(data) {
