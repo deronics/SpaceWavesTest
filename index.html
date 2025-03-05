@@ -57,7 +57,7 @@
 		  console.log("<do.G> Unity inited");
           gameInstance = unityInstance;
           loadingCover.style.display = "none";
-	  getPlayerPrefs();
+	  getPlayerPrefsUnity2022();
 		
         }).catch((message) => {
           alert(message);
@@ -86,42 +86,36 @@
 	    gameInstance.SetFullscreen(1);
 	  }
 	
-	  async function getPlayerPrefs() {
-	  const dbRequest = indexedDB.open("UnityPlayerPrefs");
+	  async function getPlayerPrefsUnity2022() {
+	  const dbRequest = indexedDB.open("UnityCache");
 	
 	  dbRequest.onsuccess = (event) => {
 	    const db = event.target.result;
-	    const objectStoreNames = Array.from(db.objectStoreNames);
-	
-	    if (objectStoreNames.includes("PlayerPrefs")) {
-	      console.log("Нашёл таблицу PlayerPrefs");
-	      readStore(db, "PlayerPrefs");
-	    } else if (objectStoreNames.includes("PLAYER_PREFS")) {
-	      console.log("Нашёл таблицу PLAYER_PREFS");
-	      readStore(db, "PLAYER_PREFS");
-	    } else {
-	      console.error("Таблицы PlayerPrefs не существует");
-	    }
-	  };
-	
-	  dbRequest.onerror = () => {
-	    console.error("Не удалось открыть базу данных");
-	  };
-	
-	  function readStore(db, storeName) {
-	    const transaction = db.transaction([storeName], "readonly");
-	    const store = transaction.objectStore(storeName);
+	    const transaction = db.transaction(["PlayerPrefs"], "readonly");
+	    const store = transaction.objectStore("PlayerPrefs");
 	    const cursor = store.openCursor();
 	
 	    cursor.onsuccess = (e) => {
 	      const result = e.target.result;
 	      if (result) {
-	        console.log(result.key, result.value);
+	        const arrayBuffer = result.value.data;
+	        const text = new TextDecoder().decode(arrayBuffer);
+	        try {
+	          const json = JSON.parse(text);
+	          console.log("PlayerPrefs:", json);
+	        } catch (e) {
+	          console.warn("Не удалось распарсить JSON", text);
+	        }
 	        result.continue();
 	      }
 	    };
-	  }
+	  };
+	
+	  dbRequest.onerror = () => {
+	    console.error("Не удалось открыть IndexedDB UnityCache");
+	  };
 	}
+
     </script>
   </body>
 </html>
