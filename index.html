@@ -57,13 +57,13 @@
 		  console.log("<do.G> Unity inited");
           gameInstance = unityInstance;
           loadingCover.style.display = "none";
-	  getPlayerPrefsUnity2022();
 		
         }).catch((message) => {
           alert(message);
         });
       };
       document.body.appendChild(script);
+      console.log(getPlayerPrefsUnity());
 
       // Focus
   	  function setFocus() {
@@ -86,7 +86,7 @@
 	    gameInstance.SetFullscreen(1);
 	  }
 	
-	  async function getPlayerPrefsUnity2022() {
+	  async function getPlayerPrefsUnity() {
 	  const dbRequest = indexedDB.open("/idbfs");
 	
 	  dbRequest.onsuccess = (event) => {
@@ -100,12 +100,8 @@
 	        if (e.target.result) {
 	          
 	            var s = e.target.result.value;
-	            console.log(e.target.result.key + " contents=" + (s.contents ? s.contents.length : "none"));
-
 		     if (e.target.result.key.includes("PlayerPrefs")) {
-		       //const text = new TextDecoder("utf-8").decode(s.contents);
-		       const result = JSON.stringify(parsePlayerPrefsBinary(s.contents), null, "\t");
-		       console.log(result);
+		       return parsePlayerPrefsBinary(s.contents), null, "\t";
 		     }
 			
 	            e.target.result['continue']();
