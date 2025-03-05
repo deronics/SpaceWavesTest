@@ -88,11 +88,29 @@
 	
 	  async function getPlayerPrefs() {
 	  const dbRequest = indexedDB.open("UnityPlayerPrefs");
-	  
-	  dbRequest.onsuccess = async (event) => {
+	
+	  dbRequest.onsuccess = (event) => {
 	    const db = event.target.result;
-	    const transaction = db.transaction(["PlayerPrefs"], "readonly");
-	    const store = transaction.objectStore("PlayerPrefs");
+	    const objectStoreNames = Array.from(db.objectStoreNames);
+	
+	    if (objectStoreNames.includes("PlayerPrefs")) {
+	      console.log("Нашёл таблицу PlayerPrefs");
+	      readStore(db, "PlayerPrefs");
+	    } else if (objectStoreNames.includes("PLAYER_PREFS")) {
+	      console.log("Нашёл таблицу PLAYER_PREFS");
+	      readStore(db, "PLAYER_PREFS");
+	    } else {
+	      console.error("Таблицы PlayerPrefs не существует");
+	    }
+	  };
+	
+	  dbRequest.onerror = () => {
+	    console.error("Не удалось открыть базу данных");
+	  };
+	
+	  function readStore(db, storeName) {
+	    const transaction = db.transaction([storeName], "readonly");
+	    const store = transaction.objectStore(storeName);
 	    const cursor = store.openCursor();
 	
 	    cursor.onsuccess = (e) => {
@@ -102,11 +120,7 @@
 	        result.continue();
 	      }
 	    };
-	  };
-	
-	  dbRequest.onerror = () => {
-	    console.error("Не удалось открыть базу данных");
-	  };
+	  }
 	}
     </script>
   </body>
