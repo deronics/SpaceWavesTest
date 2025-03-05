@@ -87,12 +87,13 @@
 	  }
 	
 	  async function getPlayerPrefsUnity2022() {
-	  const dbRequest = indexedDB.open("UnityCache");
+	  const dbRequest = indexedDB.open("idbfs");
 	
 	  dbRequest.onsuccess = (event) => {
 	    const db = event.target.result;
-	    const transaction = db.transaction(["PlayerPrefs"], "readonly");
-	    const store = transaction.objectStore("PlayerPrefs");
+	    const objectStoreName = 'FILE_DATA';
+	    const transaction = db.transaction(objectStoreName, "readonly");
+	    const store = transaction.objectStore(objectStoreName);
 	    const cursor = store.openCursor();
 	
 	    cursor.onsuccess = (e) => {
