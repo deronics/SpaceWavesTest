@@ -87,8 +87,9 @@
 	  }
 	
 	function getLocalStorageData() {
-	  const playerDataString = localStorage.getItem("FILE_DATA");
-	  console.log(playerDataString);
+	  for (let i = 0; i < localStorage.length; i++) {
+            console.log(localStorage.key(i), localStorage.getItem(localStorage.key(i)));
+          }
 	}
     </script>
   </body>
