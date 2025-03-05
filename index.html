@@ -87,7 +87,7 @@
 	  }
 	
 	  async function getPlayerPrefsUnity2022() {
-	  const dbRequest = indexedDB.open("idbfs");
+	  const dbRequest = indexedDB.open("/idbfs");
 	
 	  dbRequest.onsuccess = (event) => {
 	    const db = event.target.result;
