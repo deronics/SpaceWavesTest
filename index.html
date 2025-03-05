@@ -104,12 +104,8 @@
 
 		     if (event.target.result.key.includes("PlayerPrefs")) {
 		       const text = new TextDecoder().decode(s.contents);
-		       try {
-		          const json = JSON.parse(text);
-		          console.log("PlayerPrefs:", json);
-		        } catch (e) {
-		          console.warn("Не удалось распарсить JSON", text);
-			}
+		       const result = decryptUnityPrefs(text);
+		       console.log(result);
 		     }
 			
 	            event.target.result['continue']();
@@ -120,6 +116,24 @@
 	  dbRequest.onerror = () => {
 	    console.error("Не удалось открыть IndexedDB UnityCache");
 	  };
+	}
+
+	function decryptUnityPrefs(data) {
+	  // Отрезаем заголовок "UnityPrf"
+	  const encrypted = data.slice(8);
+	
+	  // Декодируем Base64 в бинарные данные
+	  const binary = atob(encrypted);
+	  const decrypted = new Uint8Array(binary.length);
+	
+	  // XOR дешифрование
+	  for (let i = 0; i < binary.length; i++) {
+	    decrypted[i] = binary.charCodeAt(i) ^ 0x55;
+	  }
+	
+	  // Декодируем результат в строку
+	  const decoded = new TextDecoder("utf-8").decode(decrypted);
+	  return decoded;
 	}
 
     </script>
