@@ -103,8 +103,8 @@
 	            console.log(event.target.result.key + " contents=" + (s.contents ? s.contents.length : "none"));
 
 		     if (event.target.result.key.includes("PlayerPrefs")) {
-		       const text = new TextDecoder("utf-8").decode(s.contents);
-		       const result = decryptUnityPrefs(text);
+		       //const text = new TextDecoder("utf-8").decode(s.contents);
+		       const result = parsePlayerPrefsBinary(s.contents);
 		       console.log(result);
 		     }
 			
@@ -118,30 +118,85 @@
 	  };
 	}
 
-	function decryptUnityPrefs(data) {
-	  // Отрезаем заголовок "UnityPrf"
-	  const encrypted = utf8ToBase64(data.slice(8));
+	function parsePlayerPrefsBinary(data) {
+		const SIGNATURE = "UnityPrf";
+		const view = new DataView(data.buffer);
+		const result = {};
+		const decoder = new TextDecoder();
 	
-	  // Декодируем Base64 в бинарные данные с использованием TextDecoder
-	  const binary = new Uint8Array(atob(encrypted).split('').map(char => char.charCodeAt(0)));
+		let offset = 0;
 	
-	  // XOR дешифрование
-	  for (let i = 0; i < binary.length; i++) {
-	    binary[i] = binary[i] ^ 0x55;
-	  }
+		// Read header
+		result.signature = decoder.decode(new Uint8Array(data.buffer, offset, SIGNATURE.length));
+		if (result.signature != SIGNATURE) {
+			console.error("Signature is mismatch:", result.signature);
+			return;
+		}
+		offset += SIGNATURE.length;
+		// Version?
+		result.versionMajor = view.getUint32(offset, true);
+		offset += 4;
+		result.versionMinor = view.getUint32(offset, true);
+		offset += 4;
 	
-	  // Декодируем результат обратно в строку
-	  const decoded = new TextDecoder("utf-8").decode(binary);
-	  return decoded;
-	}
-	function utf8ToBase64(utf8String) {
-	  // Преобразуем строку в Uint8Array (байты)
-	  const utf8Bytes = new TextEncoder().encode(utf8String);
-	  
-	  // Преобразуем Uint8Array в Base64 строку
-	  const base64String = btoa(String.fromCharCode(...utf8Bytes));
-	  
-	  return base64String;
+		let valueLength = 0;
+		let value = "";
+	
+		let items = [];
+	
+		// Read items
+		while (offset < data.byteLength) {
+			let obj = {};
+			const keyLength = view.getUint8(offset);
+			offset += 1;
+	
+			obj.key = decoder.decode(new Uint8Array(data.buffer, offset, keyLength));
+			offset += keyLength;
+	
+			type = view.getUint8(offset);
+			offset += 1;
+	
+			if (type > 0x80 && type < 0xFD || type == 0xFF) {
+				console.error("Unsupported value type:", obj.type);
+				return;
+			}
+	
+			switch (type) {
+				case 0xFE: // Int value
+					obj.type = "int";
+					obj.value = view.getInt32(offset, true);
+					offset += 4;
+					break;
+				case 0xFD: // Float value
+					obj.type = "float";
+					obj.value = view.getFloat32(offset, true);
+					offset += 4;
+					break;
+				case 0x80: // Long string value
+					obj.type = "str";
+					valueLength = view.getUint32(offset, true);
+					offset += 4;
+	
+					value = decoder.decode(new Uint8Array(data.buffer, offset, valueLength));
+					offset += valueLength;
+	
+					obj.value = value;
+					break;
+				default: // Short string value
+					obj.type = "str";
+					valueLength = type;
+	
+					value = decoder.decode(new Uint8Array(data.buffer, offset, valueLength));
+					offset += valueLength;
+	
+					obj.value = value;
+					break;
+			}
+			items.push(obj);
+		}
+		result.items = items;
+	
+		return result;
 	}
 
     </script>
