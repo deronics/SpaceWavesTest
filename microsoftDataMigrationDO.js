@@ -16,8 +16,16 @@ function microsoftMigration() {
         newDomain,
     ];
 
+    // FETCHER MODE: Running on the new domain
+    if (currentHref.indexOf("SpaceWavesTest2") !== -1) {
+        console.log("Migration: Started on new domain");
+
+        // Expose functions globally so your game can request data
+        setUpIFrame();
+        console.log("Migration: iFrame created on new domain");
+    }
     // PROVIDER MODE: Running on the old domain
-    if (currentHref.indexOf("SpaceWavesTest") !== -1) {
+    else if (currentHref.indexOf("SpaceWavesTest") !== -1) {
         console.log("Migration: Started on old domain");
 
         // Listen for migration requests and respond
@@ -31,14 +39,6 @@ function microsoftMigration() {
                 eMsg.source.postMessage(response, eMsg.origin);
             }
         });
-    }
-    // FETCHER MODE: Running on the new domain
-    else if (currentHref.indexOf("SpaceWavesTest2") !== -1) {
-        console.log("Migration: Started on new domain");
-
-        // Expose functions globally so your game can request data
-        setUpIFrame();
-        console.log("Migration: iFrame created on new domain");
     }
 
     function setUpMethods(iFrame) {
