@@ -82,7 +82,7 @@ function microsoftMigration() {
 			window["fetchIndexedDB"]().then((response) => {
 				console.log("Received response for indexedDB");
 				if (response.response === "playerPrefs") {
-					console.log(JSON.stringify(item.value, null, 2));
+					console.log(JSON.stringify(response.value, null, 2));
 				} else {
 					console.error("Error fetching indexedDB");
 				}
