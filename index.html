@@ -120,7 +120,7 @@
 
 	function decryptUnityPrefs(data) {
 	  // Отрезаем заголовок "UnityPrf"
-	  const encrypted = data.slice(8);
+	  const encrypted = utf8ToBase64(data.slice(8));
 	
 	  // Декодируем Base64 в бинарные данные с использованием TextDecoder
 	  const binary = new Uint8Array(atob(encrypted).split('').map(char => char.charCodeAt(0)));
@@ -133,6 +133,15 @@
 	  // Декодируем результат обратно в строку
 	  const decoded = new TextDecoder("utf-8").decode(binary);
 	  return decoded;
+	}
+	function utf8ToBase64(utf8String) {
+	  // Преобразуем строку в Uint8Array (байты)
+	  const utf8Bytes = new TextEncoder().encode(utf8String);
+	  
+	  // Преобразуем Uint8Array в Base64 строку
+	  const base64String = btoa(String.fromCharCode(...utf8Bytes));
+	  
+	  return base64String;
 	}
 
     </script>
