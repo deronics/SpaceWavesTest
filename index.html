@@ -122,17 +122,16 @@
 	  // Отрезаем заголовок "UnityPrf"
 	  const encrypted = data.slice(8);
 	
-	  // Декодируем Base64 в бинарные данные
-	  const binary = atob(encrypted);
-	  const decrypted = new Uint8Array(binary.length);
+	  // Декодируем Base64 в бинарные данные с использованием TextDecoder
+	  const binary = new Uint8Array(atob(encrypted).split('').map(char => char.charCodeAt(0)));
 	
 	  // XOR дешифрование
 	  for (let i = 0; i < binary.length; i++) {
-	    decrypted[i] = binary.charCodeAt(i) ^ 0x55;
+	    binary[i] = binary[i] ^ 0x55;
 	  }
 	
-	  // Декодируем результат в строку
-	  const decoded = new TextDecoder("utf-8").decode(decrypted);
+	  // Декодируем результат обратно в строку
+	  const decoded = new TextDecoder("utf-8").decode(binary);
 	  return decoded;
 	}
 
