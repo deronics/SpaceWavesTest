@@ -45,7 +45,6 @@
       const spinner = document.querySelector('.spinner');
 	  
       loadingCover.style.display = "";
-      getLocalStorageData();
 
       const script = document.createElement("script");
       script.src = loaderUrl;
@@ -93,6 +92,13 @@
 	    .forEach(([key, value]) => console.log(key, value));
 	  console.log("<END>");
 	}
+
+	const originalSetItem = localStorage.setItem;
+	localStorage.setItem = function (key, value) {
+	  console.log("PlayerPrefs changed:", key, value);
+	  originalSetItem.apply(this, arguments);
+	};
+
     </script>
   </body>
 </html>
