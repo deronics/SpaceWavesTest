@@ -25,7 +25,8 @@
     <script>
       window.onload = () => {
         getPlayerPrefsUnity().then((result) => {
-	  console.log(result);
+	  const items = result.items.map(({ key, value }) => ({ [key]: value }));
+	  console.log(JSON.stringify(items, null, 2));
 	}).catch((error) => {
 	  console.error("Get data error!: ", error);
 	});
