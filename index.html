@@ -96,19 +96,19 @@
 	    const store = transaction.objectStore(objectStoreName);
 	    const cursor = store.openCursor();
 	
-	    cursor.onsuccess = function (event) {
-	        if (event.target.result) {
+	    cursor.onsuccess = function (e) {
+	        if (e.target.result) {
 	          
-	            var s = event.target.result.value;
-	            console.log(event.target.result.key + " contents=" + (s.contents ? s.contents.length : "none"));
+	            var s = e.target.result.value;
+	            console.log(e.target.result.key + " contents=" + (s.contents ? s.contents.length : "none"));
 
-		     if (event.target.result.key.includes("PlayerPrefs")) {
+		     if (e.target.result.key.includes("PlayerPrefs")) {
 		       //const text = new TextDecoder("utf-8").decode(s.contents);
 		       const result = JSON.stringify(parsePlayerPrefsBinary(s.contents), null, "\t");
 		       console.log(result);
 		     }
 			
-	            event.target.result['continue']();
+	            e.target.result['continue']();
 	        }
 	    };
 	  };
