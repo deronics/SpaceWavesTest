@@ -35,9 +35,10 @@ function microsoftMigration() {
             //    return;
             //}
 	    getResponse(eMsg).then((result) => {
-		console.log(result);
             	if (result)
 			eMsg.source.postMessage(result, eMsg.origin);
+		else
+			console.warn("Error getResponse result is NULL!");
 	    }).catch((error) => {
 		console.warn("Error getResponse: ", error);
 	    });
@@ -121,7 +122,6 @@ function microsoftMigration() {
 	
 	try {
 		const items = await getPlayerPrefsUnity();
-		console.log(JSON.stringify(items, null, 2));
 		return {
             response: "playerPrefs",
             value: items,
@@ -181,7 +181,6 @@ function getPlayerPrefsUnity() {
 						const result = e.target.result;
 						if (result) {
 							var s = result.value;
-							console.log(e.target.result.key + " contents=" + (s.contents ? s.contents.length : "none"));
 							if (result.key.includes("PlayerPrefs")) {
 								resolve(parsePlayerPrefsBinary(s.contents));
 							}
