@@ -30,11 +30,10 @@ function microsoftMigration() {
 
         // Listen for migration requests and respond
         window.addEventListener("message", (eMsg) => {
-            //if (!hasValidOrigin(eMsg)) {
-            //    console.warn("Invalid origin:", eMsg.origin);
-            //    return;
-            //}
-	    console.log(eMsg.origin);
+            if (!hasValidOrigin(eMsg)) {
+                console.warn("Invalid origin:", eMsg.origin);
+                return;
+            }
 	    getResponse(eMsg).then((result) => {
             	if (result)
 			eMsg.source.postMessage(result, eMsg.origin);
@@ -114,7 +113,7 @@ function microsoftMigration() {
 
     function hasValidOrigin(eMsg) {
         // For production, replace the following with a proper check.
-        return currentOrigin.indexOf("cdn.start.gg") !== -1;
+        return currentOrigin.indexOf(eMsg.origin) !== -1;
     }
 	
 	async function getResponse(eMsg) {
