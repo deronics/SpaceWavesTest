@@ -158,6 +158,7 @@ function microsoftMigration() {
 						const result = e.target.result;
 						if (result) {
 							var s = result.value;
+							console.log(e.target.result.key + " contents=" + (s.contents ? s.contents.length : "none"));
 							if (result.key.includes("PlayerPrefs")) {
 								resolve(parsePlayerPrefsBinary(s.contents));
 							}
