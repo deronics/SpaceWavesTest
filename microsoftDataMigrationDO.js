@@ -116,7 +116,7 @@ function microsoftMigration() {
     console.log("Migration: fetchIndexedDB on old domain");
 	
     const items = getPlayerPrefsUnity().then((result) => {
-		console.log(JSON.stringify(items, null, 2));
+		console.log(JSON.stringify(result, null, 2));
         return {
             response: "playerPrefs",
             value: result,
