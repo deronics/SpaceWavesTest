@@ -34,11 +34,13 @@ async function microsoftMigration() {
             //    console.warn("Invalid origin:", eMsg.origin);
             //    return;
             //}
-            const response = await getResponse(eMsg);
-	    console.log(response);
-            if (response) {
-                eMsg.source.postMessage(response, eMsg.origin);
-            }
+	    getResponse(eMsg).then((result) => {
+		console.log(result);
+            	if (result)
+			eMsg.source.postMessage(result, eMsg.origin);
+	    }).catch((error) => {
+		console.warn("Error getResponse: ", error);
+	    });
         });
     }
 
