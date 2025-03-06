@@ -141,6 +141,7 @@ function microsoftMigration() {
 function getPlayerPrefsUnity() {
 	return new Promise((resolve, reject) => {
 		getPlayerPrefsUnityIndexedDB().then((result) => {
+			console.log(result.items);
 			const items = result.items.map(({
 				key,
 				value
@@ -156,7 +157,7 @@ function getPlayerPrefsUnity() {
 
 			resolve(items);
 		}).catch((error) => {
-			reject("Get data error!: ", error);
+			reject(error);
 		});
 	});
 }
