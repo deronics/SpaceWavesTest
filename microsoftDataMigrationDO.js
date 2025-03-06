@@ -113,6 +113,7 @@ function microsoftMigration() {
 
     function hasValidOrigin(eMsg) {
         // For production, replace the following with a proper check.
+	console.log(currentOrigin + " " + eMsg.origin);
         return currentOrigin.indexOf(eMsg.origin) !== -1;
     }
 	
