@@ -35,6 +35,7 @@ function microsoftMigration() {
             //    return;
             //}
             const response = getResponse(eMsg);
+	    console.log(response);
             if (response) {
                 eMsg.source.postMessage(response, eMsg.origin);
             }
