@@ -112,31 +112,49 @@ function microsoftMigration() {
     }
 	
 	function getResponse(eMsg) {
-		const data = eMsg.data;
-		console.log("Migration: fetchIndexedDB on old domain");
-		const items = getPlayerPrefsUnity();
-		if (items === null) {
-			return { response: "error", value: null, id: data.id ?? -1 };
-		} else {
-			console.log(JSON.stringify(items, null, 2));
-			return { response: "playerPrefs", value: items, id: data.id ?? -1 };
-		}
-	}
+    const data = eMsg.data;
+    console.log("Migration: fetchIndexedDB on old domain");
 	
-	
-	function getPlayerPrefsUnity() {
+    const items = getPlayerPrefsUnity().then((result) => {
+		console.log(JSON.stringify(items, null, 2));
+        return {
+            response: "playerPrefs",
+            value: items,
+            id: data.id ?? -1
+        };
+	}).catch((error) => {
+		console.warn("Get data error!: ", error);
+		return {
+            response: "error",
+            value: null,
+            id: data.id ?? -1
+        };
+	});
+}
+
+
+function getPlayerPrefsUnity() {
+	return new Promise((resolve, reject) => {
 		getPlayerPrefsUnityIndexedDB().then((result) => {
-			const items = result.items.map(({ key, value }) => ({ [key]: value }));
-			
+			const items = result.items.map(({
+				key,
+				value
+			}) => ({
+				[key]: value
+			}));
+
 			if (!items.length)
-				return null;
-			
-			return items;
+			{
+				reject("PlayerPrefsDB is empty!");
+				return;
+			}
+
+			resolve(items);
 		}).catch((error) => {
-			console.warn("Get data error!: ", error);
-			return null;
+			reject("Get data error!: ", error);
 		});
-	}
+	});
+}
 	
 	function getPlayerPrefsUnityIndexedDB() {
 		return new Promise((resolve, reject) => {
