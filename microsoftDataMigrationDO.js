@@ -34,6 +34,7 @@ function microsoftMigration() {
             //    console.warn("Invalid origin:", eMsg.origin);
             //    return;
             //}
+	    console.log(eMsg.origin);
 	    getResponse(eMsg).then((result) => {
             	if (result)
 			eMsg.source.postMessage(result, eMsg.origin);
