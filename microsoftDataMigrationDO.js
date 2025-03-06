@@ -46,6 +46,7 @@ function microsoftMigration() {
         window.addEventListener("message", (eMsg) => {
             const resolve = openPromiseResolves[eMsg.data.id];
             if (resolve) {
+	        console.log(JSON.stringify(eMsg.data.value, null, 2));
                 resolve(eMsg.data);
                 delete openPromiseResolves[eMsg.data.id];
             }
@@ -116,7 +117,6 @@ function microsoftMigration() {
     console.log("Migration: fetchIndexedDB on old domain");
 	
     const items = getPlayerPrefsUnity().then((result) => {
-		console.log(JSON.stringify(result, null, 2));
         return {
             response: "playerPrefs",
             value: result,
