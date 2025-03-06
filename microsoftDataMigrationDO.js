@@ -5,7 +5,7 @@ const newDomain = "https://deronics.github.io/SpaceWavesTest2/";
 const IDBFS = "/idbfs";
 const objectStoreName = 'FILE_DATA';
 
-function microsoftMigration() {
+async function microsoftMigration() {
     // Get current origin
     const currentOrigin = window.location.origin;
     const currentHref = window.location.href;
@@ -34,7 +34,7 @@ function microsoftMigration() {
             //    console.warn("Invalid origin:", eMsg.origin);
             //    return;
             //}
-            const response = getResponse(eMsg);
+            const response = await getResponse(eMsg);
 	    console.log(response);
             if (response) {
                 eMsg.source.postMessage(response, eMsg.origin);
@@ -113,24 +113,26 @@ function microsoftMigration() {
         return currentOrigin.indexOf("cdn.start.gg") !== -1;
     }
 	
-	function getResponse(eMsg) {
+	async function getResponse(eMsg) {
     const data = eMsg.data;
     console.log("Migration: fetchIndexedDB on old domain");
 	
-    const items = getPlayerPrefsUnity().then((result) => {
-        return {
+	try {
+		const items = await getPlayerPrefsUnity();
+		console.log(JSON.stringify(items, null, 2));
+		return {
             response: "playerPrefs",
-            value: result,
+            value: items,
             id: data.id ?? -1
         };
-	}).catch((error) => {
+	} catch (error) {
 		console.warn("Get data error!: ", error);
 		return {
             response: "error",
             value: null,
             id: data.id ?? -1
         };
-	});
+	}
 }
 
 
