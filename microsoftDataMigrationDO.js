@@ -5,7 +5,7 @@ const newDomain = "https://deronics.github.io/SpaceWavesTest2/";
 const IDBFS = "/idbfs";
 const objectStoreName = 'FILE_DATA';
 
-async function microsoftMigration() {
+function microsoftMigration() {
     // Get current origin
     const currentOrigin = window.location.origin;
     const currentHref = window.location.href;
