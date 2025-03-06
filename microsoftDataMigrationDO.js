@@ -119,7 +119,7 @@ function microsoftMigration() {
 		console.log(JSON.stringify(items, null, 2));
         return {
             response: "playerPrefs",
-            value: items,
+            value: result,
             id: data.id ?? -1
         };
 	}).catch((error) => {
