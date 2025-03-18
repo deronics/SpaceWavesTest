@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Space Waves</title>
     <link rel="stylesheet" href="TemplateData/style.css">
+	<link rel="manifest" href="manifest.json">
   </head>
   <body class="noselect">
     <div id="unity-container">
@@ -21,71 +22,75 @@
         <div class="spinner"></div>
       </div>
     </div>
-    <script src="./microsoftDataMigrationDO.js"></script>
+	
+	<script src="./microsoftDataMigrationDO.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        console.log("Начало миграции данных...");
-        microsoftMigration(); // Запуск миграции
+        microsoftMigration();
+      });
+	  
+      window.addEventListener("PlayerPrefsReady", () => {
+        migratePlayerPrefs();
       });
     </script>
-    <!--
+	
     <script>
-      console.log(window.location.origin);
-      window.onload = () => {
-        getPlayerPrefsUnity().then((result) => {
-	  const items = result.items.map(({ key, value }) => ({ [key]: value }));
-	  console.log(JSON.stringify(items, null, 2));
-	}).catch((error) => {
-	  console.error("Get data error!: ", error);
-	});
-      };
-    </script>
-    -->
+	  window.addEventListener("load", function () {
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.register("ServiceWorker.js");
+        }
+      });
 	  
-    <script>
-	  var gameInstance;
-
-      const buildUrl = "Build";
-      const loaderUrl = buildUrl + "/dae5c7bd2b15915f51ae4e56b8f5367d.loader.js";
-      const config = {
-        dataUrl: buildUrl + "/d875e10f105f3cf3a54208e3442b14fd.data.unityweb",
-        frameworkUrl: buildUrl + "/c294141a5afd6131bc4b9e4c7bbcd835.framework.js.unityweb",
-        codeUrl: buildUrl + "/d3b0e1ff60e97c8b3439acfe401af127.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "do.Games",
-        productName: "Space Waves",
-        productVersion: "1.1.2-preview"
-		//matchWebGLToCanvasSize: "false"
-      };
-
-      const container = document.querySelector("#unity-container");
+	  const container = document.querySelector("#unity-container");
       const canvas = document.querySelector("#unity-canvas");
       const loadingCover = document.querySelector("#loading-cover");
       const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
       const progressBarFull = document.querySelector("#unity-progress-bar-full");
       const spinner = document.querySelector('.spinner');
+
+      const buildUrl = "Build";
+      const loaderUrl = buildUrl + "/dae5c7bd2b15915f51ae4e56b8f5367d.loader.js";
+      const config = {
+        dataUrl: buildUrl + "/2c9bc0098489d5e75341d59019263bfa.data.unityweb",
+        frameworkUrl: buildUrl + "/e00c2c9270a426875b72c5a93857f1df.framework.js.unityweb",
+        codeUrl: buildUrl + "/08df7b704ea55604fb660e8664abbbb4.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "do.Games",
+        productName: "Space Waves",
+        productVersion: "1.1.2-ms",
+		matchWebGLToCanvasSize: "false"
+      };
 	  
       loadingCover.style.display = "";
-
-      const script = document.createElement("script");
+	  
+	  var needMigrate = false;
+	  var gameInstance;
+      var script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
-          spinner.style.display = "none";
+		  spinner.style.display = "none";
           progressBarEmpty.style.display = "";
-          progressBarFull.style.width = `${100 * progress}%`;
+          progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
 		  console.log("<do.G> Unity inited");
           gameInstance = unityInstance;
           loadingCover.style.display = "none";
-		
+		  resizeCanvas();
+		  loadAds();
+		  
+		  if (needMigrate) {
+			needMigrate = false;
+		    gameInstance.SendMessage('MSStartSDK', 'OnMigratePlayerPrefs', window["fetchPlayerPrefs"]);
+		  }
+		  
         }).catch((message) => {
           alert(message);
         });
       };
       document.body.appendChild(script);
-
-      // Focus
+	  
+	  // Focus
   	  function setFocus() {
   	    container.focus();
   		window.focus();
@@ -100,135 +105,133 @@
   	  });
   	  window.addEventListener("resize", () => {
   	    setFocus();
+		resizeCanvas();
   	  });
 	  
-	  function setFullscreen() {
-	    gameInstance.SetFullscreen(1);
+	  function resizeCanvas() {
+		var pixelRatio = window.devicePixelRatio || 1;
+		var width = canvas.clientWidth * pixelRatio;
+		var height = canvas.clientHeight * pixelRatio;
+			
+		if (canvas.width != width || canvas.height != height) {
+			if (height > 1080) {
+				canvas.width = Math.floor(width / height * 1080);
+				canvas.height = 1080;
+			}
+			else
+			{
+				canvas.width = width;
+				canvas.height = height;
+			}
+		}
 	  }
-	
-	  function getPlayerPrefsUnity() {
-	    return new Promise((resolve, reject) => {
-	      try {
-		const dbRequest = indexedDB.open("/idbfs");
-	
-	  	dbRequest.onsuccess = (event) => {
-	    	  const db = event.target.result;
-	    	  const objectStoreName = 'FILE_DATA';
-		  
-		  if (!db.objectStoreNames.contains(objectStoreName)) {
-		    reject(`Object store "${objectStoreName}" does not exist.`);
-		    return;
-		  }
-		  
-	    	  const transaction = db.transaction(objectStoreName, "readonly");
-	    	  const store = transaction.objectStore(objectStoreName);
-	    	  const cursor = store.openCursor();
-	
-	    	  cursor.onsuccess = function (e) {
-		    const result = e.target.result;
-	            if (result) {
-	              var s = result.value;
-		      if (result.key.includes("PlayerPrefs")) {
-			resolve(parsePlayerPrefsBinary(s.contents));
-		      }
-	              result['continue']();
-	            } else {
-		      reject("No data with this key!");
-		    }
-	    	  };
-		};
-	
-	  	dbRequest.onerror = () => {
-	    	  reject("Error while iterating through records in IndexedDB");
-	  	};
-	      }
-	      catch (err) {
-		reject("Error parse IndexedDB: " + err);
-	      }
-	  });
-	}
-
-	function parsePlayerPrefsBinary(data) {
-		const SIGNATURE = "UnityPrf";
-		const view = new DataView(data.buffer);
-		const result = {};
-		const decoder = new TextDecoder();
-	
-		let offset = 0;
-	
-		// Read header
-		result.signature = decoder.decode(new Uint8Array(data.buffer, offset, SIGNATURE.length));
-		if (result.signature != SIGNATURE) {
-			console.error("Signature is mismatch:", result.signature);
-			return;
+	  
+	  function migratePlayerPrefs() {
+	    if (typeof gameInstance !== 'undefined') {
+		  gameInstance.SendMessage('MSStartSDK', 'OnMigratePlayerPrefs', window["fetchPlayerPrefs"]);
+		} else {
+		  needMigrate = true;
 		}
-		offset += SIGNATURE.length;
-		// Version?
-		result.versionMajor = view.getUint32(offset, true);
-		offset += 4;
-		result.versionMinor = view.getUint32(offset, true);
-		offset += 4;
-	
-		let valueLength = 0;
-		let value = "";
-	
-		let items = [];
-	
-		// Read items
-		while (offset < data.byteLength) {
-			let obj = {};
-			const keyLength = view.getUint8(offset);
-			offset += 1;
-	
-			obj.key = decoder.decode(new Uint8Array(data.buffer, offset, keyLength));
-			offset += keyLength;
-	
-			type = view.getUint8(offset);
-			offset += 1;
-	
-			if (type > 0x80 && type < 0xFD || type == 0xFF) {
-				console.error("Unsupported value type:", obj.type);
-				return;
-			}
-	
-			switch (type) {
-				case 0xFE: // Int value
-					obj.type = "int";
-					obj.value = view.getInt32(offset, true);
-					offset += 4;
-					break;
-				case 0xFD: // Float value
-					obj.type = "float";
-					obj.value = view.getFloat32(offset, true);
-					offset += 4;
-					break;
-				case 0x80: // Long string value
-					obj.type = "str";
-					valueLength = view.getUint32(offset, true);
-					offset += 4;
-	
-					value = decoder.decode(new Uint8Array(data.buffer, offset, valueLength));
-					offset += valueLength;
-	
-					obj.value = value;
-					break;
-				default: // Short string value
-					obj.type = "str";
-					valueLength = type;
-	
-					value = decoder.decode(new Uint8Array(data.buffer, offset, valueLength));
-					offset += valueLength;
-	
-					obj.value = value;
-					break;
-			}
-			items.push(obj);
-		}
-		result.items = items;
-	
-		return result;
-	}
-
+	  }
     </script>
+	
+	<script src="https://assets.msn.com/staticsb/statics/latest/msstart-games-sdk/msstart-v1.0.0-rc.19.min.js"></script>
+	
+	<script>
+	
+	  var _interstitialAdInstance = null;
+	  var _rewardedAdInstance = null;
+	  
+	  function loadAds() {
+	    loadInterstitialAd();
+	    loadRewardedAd();
+	  }
+	  
+	  function loadInterstitialAd() {
+	    _interstitialAdInstance = null;
+		
+		$msstart.loadAdsAsync().then(adInstance => {
+		  // Use the adInstance.instanceId to make a call to showAdsAsync
+		  _interstitialAdInstance = adInstance;
+		  console.log("Interstitial ad successfully loaded!");
+	    }).catch(e => {
+		  console.error('<do.G> Error loading interstitial ad. Will retry in 20 seconds...', e);
+		  setTimeout(loadInterstitialAd, 20000);
+		});
+	  }
+	  
+	  function loadRewardedAd() {
+	    _rewardedAdInstance = null;
+		
+		$msstart.loadAdsAsync(true).then(adInstance => {
+		  // Pass in boolean true for the optional parameter isRewardedAd, to fetch Rewarded ads
+		  _rewardedAdInstance = adInstance;
+		  console.log("Rewarded ad successfully loaded!");
+	    }).catch(e => {
+		  console.error('<do.G> Error loading rewarded ad. Will retry in 20 seconds...', e);
+		  setTimeout(loadRewardedAd, 20000);
+		});
+	  }
+	  
+	  async function showInterstitialAd() {
+	    if (_interstitialAdInstance == null) {
+		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		  return;
+		}
+		
+		let t;
+		
+		try {
+		  t = await $msstart.showAdsAsync(_interstitialAdInstance.instanceId);
+		} catch (e) {
+		  console.error('<do.G> Error show interstitial ad: ', e);
+		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		  loadInterstitialAd();
+		}
+		
+		if (t) {
+		  try {
+		    await t.showAdsCompletedAsync;
+			gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdClose');
+			loadInterstitialAd();
+		  } catch (e) {
+            console.error('<do.G> Error interstitial showAdsCompletedAsync: ', e);
+		    gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		    loadInterstitialAd();
+          }
+		}
+	  }
+	  
+	  async function showRewardedAd() {
+	    if (_rewardedAdInstance == null) {
+		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		  return;
+		}
+		
+		let t;
+		
+		try {
+		  t = await $msstart.showAdsAsync(_rewardedAdInstance.instanceId);
+		} catch (e) {
+		  console.error('<do.G> Error show rewarded ad: ', e);
+		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		  loadRewardedAd();
+		}
+		
+		if (t) {
+		  try {
+		    await t.showAdsCompletedAsync;
+			gameInstance.SendMessage('MSStartSDK', 'OnReward');
+			loadRewardedAd();
+		  } catch (e) {
+            console.error('<do.G> Error rewarded showAdsCompletedAsync: ', e);
+		    gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		    loadRewardedAd();
+          }
+		}
+	  }
+	  
+	</script>
+	
   </body>
 </html>

@@ -1,9 +1,9 @@
 const openPromiseResolves = {};
 let nextId = 0;
-const oldDomain = "https://deronics.github.io/SpaceWavesTest/";
-const newDomain = "https://deronics.github.io/SpaceWavesTest2/";
-const oldDomainOrigin = "SpaceWavesTest";
-const newDomainOrigin = "SpaceWavesTest2";
+const oldDomain = "https://crazygames.cdn.start.gg/9nm5764dbppg/v5/index.html";
+const newDomain = "https://crazygames.cdn.msnfun.com";
+const oldDomainOrigin = "cdn.start.gg";
+const newDomainOrigin = "cdn.msnfun.com";
 const IDBFS = "/idbfs";
 const objectStoreName = 'FILE_DATA';
 
@@ -13,18 +13,19 @@ function microsoftMigration() {
     const currentHref = window.location.href;
     window["oldDomain"] = oldDomain;
 
-    // List of allowed origins that can request data from this provider.
-    const validOrigins = [
-        newDomain,
-    ];
-
     // FETCHER MODE: Running on the new domain
     if (currentHref.indexOf(newDomainOrigin) !== -1) {
         console.log("Migration: Started on new domain");
-
-        // Expose functions globally so your game can request data
-        setUpIFrame();
-        console.log("Migration: iFrame created on new domain");
+		
+		isIndexedDBAlreadyExist().then((result) => {
+			if (result) {
+				console.warn("Migration: Stopped on new domain. IndexedDB already exist!");
+			} else {
+				// Expose functions globally so your game can request data
+				setUpIFrame();
+				console.log("Migration: iFrame created on new domain");
+			}
+		});
     }
     // PROVIDER MODE: Running on the old domain
     else if (currentHref.indexOf(oldDomainOrigin) !== -1) {
@@ -88,18 +89,15 @@ function microsoftMigration() {
 	}
 
     function requestKeys() {
-		isIndexedDBAlreadyExist().then((result) => {
-			if (result) {
-				console.error("Error indexedDB already exist");
+		window["fetchIndexedDB"]().then((response) => {
+			console.log("Received response for indexedDB");
+			if (response.response === "playerPrefs") {
+				console.log(JSON.stringify(response.value, null, 2));
+				window["fetchPlayerPrefs"] = JSON.stringify(response.value, null, 2);
+				window.dispatchEvent(new CustomEvent("PlayerPrefsReady"));
+				closeIFrame();
 			} else {
-				window["fetchIndexedDB"]().then((response) => {
-					console.log("Received response for indexedDB");
-					if (response.response === "playerPrefs") {
-						console.log(JSON.stringify(response.value, null, 2));
-					} else {
-						console.error("Error fetching indexedDB");
-					}
-				});
+				console.error("Error fetching indexedDB");
 			}
 		});
     }
@@ -117,9 +115,16 @@ function microsoftMigration() {
             requestKeys();
         });
     }
+	
+	function closeIFrame() {
+    	if (window["iFrame"]) {
+        	window["iFrame"].remove();
+        	delete window["iFrame"];
+    	}
+    }
 
     function hasValidOrigin(eMsg) {
-        return currentOrigin.indexOf(eMsg.origin) !== -1;
+        return currentOrigin.indexOf(oldDomainOrigin) !== -1;
     }
 	
 	async function getResponse(eMsg) {
@@ -144,28 +149,28 @@ function microsoftMigration() {
 	}
 
 
-function getPlayerPrefsUnity() {
-	return new Promise((resolve, reject) => {
-		getPlayerPrefsUnityIndexedDB().then((result) => {
-			const items = result.items.map(({
-				key,
-				value
-			}) => ({
-				[key]: value
-			}));
+	function getPlayerPrefsUnity() {
+		return new Promise((resolve, reject) => {
+			getPlayerPrefsUnityIndexedDB().then((result) => {
+				const items = result.items.map(({
+					key,
+					value
+				}) => ({
+					[key]: value
+				}));
 
-			if (!items.length)
-			{
-				reject("PlayerPrefsDB is empty!");
-				return;
-			}
+				if (!items.length)
+				{
+					reject("PlayerPrefsDB is empty!");
+					return;
+				}
 
-			resolve(items);
-		}).catch((error) => {
-			reject(error);
+				resolve(items);
+			}).catch((error) => {
+				reject(error);
+			});
 		});
-	});
-}
+	}
 	
 	function getPlayerPrefsUnityIndexedDB() {
 		return new Promise((resolve, reject) => {
