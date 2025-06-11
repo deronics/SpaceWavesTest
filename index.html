@@ -83,7 +83,6 @@
         meta.name = 'viewport';
         meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
         document.getElementsByTagName('head')[0].appendChild(meta);
-        alert("here");
       }
 
 
@@ -91,6 +90,7 @@
 
       var script = document.createElement("script");
       script.src = loaderUrl;
+      script.defer = true;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
           progressBarFull.style.width = 100 * progress + "%";
@@ -100,7 +100,7 @@
           alert(message);
         });
       };
-      document.body.appendChild(script);
+      document.head.appendChild(script);
     </script>
   </body>
 </html>
