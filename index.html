@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | TestProject</title>
+    <title>Unity WebGL Player | TestProject2</title>
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
     <canvas id="unity-canvas" width=960 height=600 tabindex="-1" style="width: 960px; height: 600px; background: #231F20"></canvas>
-    <script src="Build/b9e360abd7d2bd06feff31f828742053.loader.js"></script>
+    <script src="Build/9aa410e12f6b1f62bd5af05aeb2036e2.loader.js"></script>
     <script>
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         // Mobile device style: fill the whole browser client area with the game canvas:
@@ -22,23 +22,18 @@
         canvas.style.position = "fixed";
 
         document.body.style.textAlign = "left";
-
       }
 
       createUnityInstance(document.querySelector("#unity-canvas"), {
-        arguments: [],
-        dataUrl: "Build/ba597a002b4ecb56ea2d35f205399c65.data.unityweb",
-        frameworkUrl: "Build/443966d94d01fdaebfc8c5b170697b55.framework.js.unityweb",
-        codeUrl: "Build/6aa90c7582f34df2eac64b7f437069ac.wasm.unityweb",
+        dataUrl: "Build/ecf4f6f98f0e72c14bfafaae12c7b258.data.unityweb",
+        frameworkUrl: "Build/a0788b558b30ba7a68304df6d1eb38cb.framework.js.unityweb",
+        codeUrl: "Build/ab71fa1b228a73d255e6a9514110cdaa.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
-        productName: "TestProject",
+        productName: "TestProject2",
         productVersion: "1.0",
         // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
         // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-      }).then((unityInstance) => {
-      }).catch((message) => {
-        alert(message);
       });
     </script>
   </body>
