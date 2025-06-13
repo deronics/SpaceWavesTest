@@ -63,23 +63,6 @@
         });
       };
       document.body.appendChild(script);
-
-      // Focus
-  	  function setFocus() {
-  	    container.focus();
-  		window.focus();
-  		canvas.focus();
-  	  }
-
-  	  window.addEventListener("touchstart", () => {
-  	    setFocus();
-  	  });
-  	  window.addEventListener("pointerdown", () => {
-  	    setFocus();
-  	  });
-  	  window.addEventListener("resize", () => {
-  	    setFocus();
-  	  });
 	  
 	  function setFullscreen() {
 	    gameInstance.SetFullscreen(1);
