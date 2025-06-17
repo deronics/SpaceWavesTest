@@ -68,18 +68,32 @@
 	    gameInstance.SetFullscreen(1);
 	  }
     </script>
-    <script>
-    // Безопасно отписываем слушатель, если он существует
-    function tryRemoveTouchStartHandler() {
-        if (typeof _userEventCallback === "function") {
-            window.removeEventListener("touchstart", _userEventCallback);
-        } else {
-            console.warn("touchstart listener not found: _userEventCallback is not defined");
-        }
-    }
 
-    // Пример: отписаться через некоторое время после загрузки
-    window.addEventListener("load", function () {
+    <script>
+    (function () {
+        const originalAddEventListener = window.addEventListener;
+        const listeners = {};
+
+        window.addEventListener = function (type, listener, options) {
+            if (type === "touchstart") {
+                listeners.touchstart = listener;
+            }
+            originalAddEventListener.call(window, type, listener, options);
+        };
+
+        window.tryRemoveUnityTouchStart = function () {
+            if (listeners.touchstart) {
+                window.removeEventListener("touchstart", listeners.touchstart);
+                console.log("touchstart listener removed");
+            } else {
+                console.warn("No touchstart listener found to remove");
+            }
+        };
+    })();
+	    function tryRemoveTouchStartHandler() {
+        window.tryRemoveUnityTouchStart();
+    }
+  window.addEventListener("load", function () {
         setTimeout(tryRemoveTouchStartHandler, 10000);
     });
 </script>
