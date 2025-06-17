@@ -68,5 +68,20 @@
 	    gameInstance.SetFullscreen(1);
 	  }
     </script>
+    <script>
+    // Безопасно отписываем слушатель, если он существует
+    function tryRemoveTouchStartHandler() {
+        if (typeof _userEventCallback === "function") {
+            window.removeEventListener("touchstart", _userEventCallback);
+        } else {
+            console.warn("touchstart listener not found: _userEventCallback is not defined");
+        }
+    }
+
+    // Пример: отписаться через некоторое время после загрузки
+    window.addEventListener("load", function () {
+        setTimeout(tryRemoveTouchStartHandler, 3000); // подождать 3 секунды на всякий случай
+    });
+</script>
   </body>
 </html>
