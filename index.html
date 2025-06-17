@@ -68,18 +68,7 @@
 	    gameInstance.SetFullscreen(1);
 	  }
     </script>
-    <script>
-      let handled = false;
-      function safeRemoveUnityTouchstart() {
-      if (!handled && window.tryRemoveUnityTouchStart) {
-          window.tryRemoveUnityTouchStart();
-          handled = true;
-        }
-      }
 
-      document.addEventListener("touchstart", safeRemoveUnityTouchstart, { once: true });
-    </script>
-<!-- 
     <script>
     (function () {
         const originalAddEventListener = window.addEventListener;
@@ -108,6 +97,6 @@
         setTimeout(tryRemoveTouchStartHandler, 10000);
     });
 </script>
-	  -->
+	  
   </body>
 </html>
