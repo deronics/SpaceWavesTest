@@ -69,15 +69,15 @@
 	  }
     </script>
     <script>
-      function tryRemoveTouchStartHandler() {
-        Object.defineProperty(WEBAudio.audioContext, "state", {
-          get: function() { return "running"; }
-        });
+      let handled = false;
+      function safeRemoveUnityTouchstart() {
+      if (!handled && window.tryRemoveUnityTouchStart) {
+          window.tryRemoveUnityTouchStart();
+          handled = true;
+        }
       }
-      tryRemoveTouchStartHandler();
-      //window.addEventListener("load", function () {
-      //  setTimeout(tryRemoveTouchStartHandler, 10000);
-      }//);
+
+      document.addEventListener("touchstart", safeRemoveUnityTouchstart, { once: true });
     </script>
 <!-- 
     <script>
