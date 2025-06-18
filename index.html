@@ -25,11 +25,11 @@
 	  var gameInstance;
 
       const buildUrl = "Build";
-      const loaderUrl = buildUrl + "/3a2bee3c3f50c1e448261d25db4d7577.loader.js";
+      const loaderUrl = buildUrl + "/48f862adecd9c5fca2e428b66e794ce9.loader.js";
       const config = {
-        dataUrl: buildUrl + "/49805210dbd88e0ffbc0f9e6efd365e7.data.unityweb",
-        frameworkUrl: buildUrl + "/e09b9f9b97a7c7d3096fac4ce3f7cc91.framework.js.unityweb",
-        codeUrl: buildUrl + "/16e727ffe436db8adc7707f83ada2326.wasm.unityweb",
+        dataUrl: buildUrl + "/2a2848f10cce481d34cadcad592ad77c.data.unityweb",
+        frameworkUrl: buildUrl + "/297166148b86eb5ccd37843d2c5c143c.framework.js.unityweb",
+        codeUrl: buildUrl + "/e7ada5020541cac123845bc1a66a2477.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "do.Games",
         productName: "Space Waves",
@@ -68,35 +68,33 @@
 	    gameInstance.SetFullscreen(1);
 	  }
     </script>
-
     <script>
-    (function () {
-        const originalAddEventListener = window.addEventListener;
-        const listeners = {};
-
-        window.addEventListener = function (type, listener, options) {
-            if (type === "touchstart") {
-                listeners.touchstart = listener;
-            }
-            originalAddEventListener.call(window, type, listener, options);
-        };
-
-        window.tryRemoveUnityTouchStart = function () {
-            if (listeners.touchstart) {
-                window.removeEventListener("touchstart", listeners.touchstart);
-                console.log("touchstart listener removed");
-            } else {
-                console.warn("No touchstart listener found to remove");
-            }
-        };
-    })();
-	    function tryRemoveTouchStartHandler() {
-        window.tryRemoveUnityTouchStart();
-    }
-  window.addEventListener("load", function () {
-        setTimeout(tryRemoveTouchStartHandler, 5000);
-    });
-</script>
-	  
+      (function () {
+          const originalAddEventListener = window.addEventListener;
+          const listeners = {};
+  
+          window.addEventListener = function (type, listener, options) {
+              if (type === "touchstart") {
+                  listeners.touchstart = listener;
+              }
+              originalAddEventListener.call(window, type, listener, options);
+          };
+  
+          window.tryRemoveUnityTouchStart = function () {
+              if (listeners.touchstart) {
+                  window.removeEventListener("touchstart", listeners.touchstart);
+                  console.log("touchstart listener removed");
+              } else {
+                  console.warn("No touchstart listener found to remove");
+              }
+          };
+      })();
+        function tryRemoveTouchStartHandler() {
+          window.tryRemoveUnityTouchStart();
+      }
+    window.addEventListener("load", function () {
+          setTimeout(tryRemoveTouchStartHandler, 5000);
+      });
+  </script>
   </body>
 </html>
