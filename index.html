@@ -67,11 +67,12 @@
 	  
 	    function setFullscreen() {
 	      gameInstance.SetFullscreen(1);
+      }
       
       function computeDevicePixelRatio() {
         const maxRenderHeight = 720;
 	      const nativeRatio = window.devicePixelRatio;
-        const rendererHeight = window.screen.height * devicePixelRatio;
+        const rendererHeight = window.screen.height * nativeRatio;
 
         console.log("ratio before: " + nativeRatio);
 
@@ -85,7 +86,6 @@
 
         return nativeRatio;
       }
-	  }
     </script>
     <script>
       (function () {
