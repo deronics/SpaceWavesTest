@@ -74,12 +74,12 @@
 	const nativeRatio = window.devicePixelRatio;
         const rendererHeight = window.screen.height * nativeRatio;
 
-        console.log("ratio before: " + nativeRatio);
+        console.log(window.screen.height + " " + nativeRatio);
 
         if (/Macintosh|iPhone|iPad|iPod/.test(navigator.userAgent)) {
           if (rendererHeight > maxRenderHeight) {
             const scale = maxRenderHeight / rendererHeight;
-            console.log("ratio after: " + nativeRatio * scale);
+            console.log(scale + " " + nativeRatio * scale);
             return nativeRatio * scale;
           }
         }
