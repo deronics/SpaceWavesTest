@@ -73,13 +73,13 @@
         const maxRenderHeight = 720;
 	const nativeRatio = window.devicePixelRatio;
         const rendererHeight = window.screen.height * nativeRatio;
-
-        console.log(window.screen.height + " " + nativeRatio);
+	console.log(window.innerHeight);
+        //console.log(window.screen.height + " " + nativeRatio);
 
         if (/Macintosh|iPhone|iPad|iPod/.test(navigator.userAgent)) {
           if (rendererHeight > maxRenderHeight) {
             const scale = maxRenderHeight / rendererHeight;
-            console.log(scale + " " + nativeRatio * scale);
+            //console.log(scale + " " + nativeRatio * scale);
             return nativeRatio * scale;
           }
         }
