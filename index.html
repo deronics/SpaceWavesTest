@@ -70,18 +70,19 @@
       }
       
       function computeDevicePixelRatio() {
-        const maxRenderHeight = 720;
-	const nativeRatio = window.devicePixelRatio;
-        const rendererHeight = window.innerHeight * nativeRatio;
-
-        if (/Macintosh|iPhone|iPad|iPod/.test(navigator.userAgent)) {
+	if (/Macintosh|iPhone|iPad|iPod/.test(navigator.userAgent)) {
+          const maxRenderHeight = 720;
+	  const nativeRatio = window.devicePixelRatio;
+	  const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+	  const rendererHeight = isIOS ? window.screen.height : window.screen.height * nativeRatio;
+	  
           if (rendererHeight > maxRenderHeight) {
             const scale = maxRenderHeight / rendererHeight;
             return nativeRatio * scale;
           }
         }
 
-        return nativeRatio;
+        return window.devicePixelRatio;
       }
     </script>
     <script>
