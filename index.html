@@ -25,15 +25,16 @@
 	  var gameInstance;
 
       const buildUrl = "Build";
-      const loaderUrl = buildUrl + "/dffaf5a1d2ff31f5e2e59d5112b3765f.loader.js";
+      const loaderUrl = buildUrl + "/c747524f70f3c936a3471d321c1eefe9.loader.js";
       const config = {
-        dataUrl: buildUrl + "/7482f4415ed2cc4f053c3cea2da0bd56.data.unityweb",
+        dataUrl: buildUrl + "/e09528489ac8143fd7a74fc1f1b39d97.data.unityweb",
         frameworkUrl: buildUrl + "/2ec4775e8529b8c7d5cf2ac850c3ed0c.framework.js.unityweb",
-        codeUrl: buildUrl + "/30e2538471334be8104b797ead71a745.wasm.unityweb",
+        codeUrl: buildUrl + "/022119fe77abad9100c11b5858b9fb2a.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "do.Games",
         productName: "Space Waves",
-        productVersion: "1.1.5-preview"
+        productVersion: "1.1.5-preview",
+        devicePixelRatio: computeDevicePixelRatio()
 		//matchWebGLToCanvasSize: "false"
       };
 
@@ -64,8 +65,26 @@
       };
       document.body.appendChild(script);
 	  
-	  function setFullscreen() {
-	    gameInstance.SetFullscreen(1);
+	    function setFullscreen() {
+	      gameInstance.SetFullscreen(1);
+      
+      function computeDevicePixelRatio() {
+        const maxRenderHeight = 720;
+	      const nativeRatio = window.devicePixelRatio;
+        const rendererHeight = window.screen.height * devicePixelRatio;
+
+        console.log("ratio before: " + nativeRatio);
+
+        if (/Macintosh|iPhone|iPad|iPod/.test(navigator.userAgent)) {
+          if (rendererHeight > maxRenderHeight) {
+            const scale = maxRenderHeight / rendererHeight;
+            console.log("ratio after: " + nativeRatio * scale);
+            return nativeRatio * scale;
+          }
+        }
+
+        return nativeRatio;
+      }
 	  }
     </script>
     <script>
