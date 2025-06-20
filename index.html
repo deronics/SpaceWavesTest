@@ -65,12 +65,13 @@
       };
       document.body.appendChild(script);
 	  
-	    function setFullscreen() {
-	      gameInstance.SetFullscreen(1);
+      function setFullscreen() {
+	gameInstance.SetFullscreen(1);
+      }
       
       function computeDevicePixelRatio() {
         const maxRenderHeight = 720;
-	      const nativeRatio = window.devicePixelRatio;
+	const nativeRatio = window.devicePixelRatio;
         const rendererHeight = window.screen.height * devicePixelRatio;
 
         console.log("ratio before: " + nativeRatio);
@@ -85,7 +86,6 @@
 
         return nativeRatio;
       }
-	  }
     </script>
     <script>
       (function () {
