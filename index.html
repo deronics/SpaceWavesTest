@@ -73,7 +73,7 @@
 	if (/Macintosh|iPhone|iPad|iPod/.test(navigator.userAgent)) {
           const maxRenderHeight = 720;
 	  const nativeRatio = window.devicePixelRatio;
-	  const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+	  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 	  const rendererHeight = isIOS ? window.screen.height : window.screen.height * nativeRatio;
 	  
           if (rendererHeight > maxRenderHeight) {
