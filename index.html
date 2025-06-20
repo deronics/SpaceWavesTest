@@ -65,14 +65,24 @@
       };
       document.body.appendChild(script);
 	  
+<<<<<<< HEAD
 	    function setFullscreen() {
 	      gameInstance.SetFullscreen(1);
+=======
+      function setFullscreen() {
+	gameInstance.SetFullscreen(1);
+>>>>>>> 78392d5f148f61f6c3da717405c281da3f457c35
       }
       
       function computeDevicePixelRatio() {
         const maxRenderHeight = 720;
+<<<<<<< HEAD
 	      const nativeRatio = window.devicePixelRatio;
         const rendererHeight = window.screen.height * nativeRatio;
+=======
+	const nativeRatio = window.devicePixelRatio;
+        const rendererHeight = window.screen.height * devicePixelRatio;
+>>>>>>> 78392d5f148f61f6c3da717405c281da3f457c35
 
         console.log("ratio before: " + nativeRatio);
 
