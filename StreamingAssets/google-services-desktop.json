@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "917352619703",
+    "project_id": "space-waves-mobile",
+    "storage_bucket": "space-waves-mobile.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:917352619703:android:eb3388c3866fc00c51f732",
+        "android_client_info": {
+          "package_name": "com.CrazyGames.SpaceWaves"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlA9cWUF7HUQDbwAo8k2gpshZCZ-_tEW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
