@@ -23,17 +23,6 @@
       </div>
     </div>
 	
-	<script src="./microsoftDataMigrationDO.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        microsoftMigration();
-      });
-	  
-      window.addEventListener("PlayerPrefsReady", () => {
-        migratePlayerPrefs();
-      });
-    </script>
-	
     <script>
 	  window.addEventListener("load", function () {
         if ("serviceWorker" in navigator) {
@@ -49,21 +38,20 @@
       const spinner = document.querySelector('.spinner');
 
       const buildUrl = "Build";
-      const loaderUrl = buildUrl + "/dae5c7bd2b15915f51ae4e56b8f5367d.loader.js";
+      const loaderUrl = buildUrl + "/184f13270996d700497c5009aa1e564a.loader.js";
       const config = {
-        dataUrl: buildUrl + "/2c9bc0098489d5e75341d59019263bfa.data.unityweb",
-        frameworkUrl: buildUrl + "/e00c2c9270a426875b72c5a93857f1df.framework.js.unityweb",
-        codeUrl: buildUrl + "/08df7b704ea55604fb660e8664abbbb4.wasm.unityweb",
+        dataUrl: buildUrl + "/2b864b6498b4e5e6895953cfbcc06b40.data.unityweb",
+        frameworkUrl: buildUrl + "/8b0baa9999c6d6c873ea2e6d9fa97649.framework.js.unityweb",
+        codeUrl: buildUrl + "/444d2972dd3f75d4e53eba894a3a5bd1.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "do.Games",
         productName: "Space Waves",
-        productVersion: "1.1.2-ms",
+        productVersion: "1.1.5-ms",
 		matchWebGLToCanvasSize: "false"
       };
 	  
       loadingCover.style.display = "";
 	  
-	  var needMigrate = false;
 	  var gameInstance;
       var script = document.createElement("script");
       script.src = loaderUrl;
@@ -78,11 +66,6 @@
           loadingCover.style.display = "none";
 		  resizeCanvas();
 		  loadAds();
-		  
-		  if (needMigrate) {
-			needMigrate = false;
-		    gameInstance.SendMessage('MSStartSDK', 'OnMigratePlayerPrefs', window["fetchPlayerPrefs"]);
-		  }
 		  
         }).catch((message) => {
           alert(message);
@@ -123,14 +106,6 @@
 				canvas.width = width;
 				canvas.height = height;
 			}
-		}
-	  }
-	  
-	  function migratePlayerPrefs() {
-	    if (typeof gameInstance !== 'undefined') {
-		  gameInstance.SendMessage('MSStartSDK', 'OnMigratePlayerPrefs', window["fetchPlayerPrefs"]);
-		} else {
-		  needMigrate = true;
 		}
 	  }
     </script>
