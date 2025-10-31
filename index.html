@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Space Waves</title>
     <link rel="stylesheet" href="TemplateData/style.css">
-	<link rel="manifest" href="manifest.json">
   </head>
   <body class="noselect">
     <div id="unity-container">
@@ -22,191 +21,80 @@
         <div class="spinner"></div>
       </div>
     </div>
-	
     <script>
-	  window.addEventListener("load", function () {
-        if ("serviceWorker" in navigator) {
-          navigator.serviceWorker.register("ServiceWorker.js");
-        }
-      });
-	  
-	  const container = document.querySelector("#unity-container");
+	  var gameInstance;
+
+      const buildUrl = "Build";
+      const loaderUrl = buildUrl + "/7f08fa5fbd525a76e9816b5bdc9a69fa.loader.js";
+      const config = {
+        dataUrl: buildUrl + "/096e5e2ff3330d551f1b603653d1759f.data.unityweb",
+        frameworkUrl: buildUrl + "/1ce006e8835ce5e168d9fa4159badabb.framework.js.unityweb",
+        codeUrl: buildUrl + "/21ef68fb9645feb26b91573ca0ad1ecd.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "do.Games",
+        productName: "Space Waves",
+        productVersion: "1.1.9-preview"
+		//matchWebGLToCanvasSize: "false"
+      };
+
+      const container = document.querySelector("#unity-container");
       const canvas = document.querySelector("#unity-canvas");
       const loadingCover = document.querySelector("#loading-cover");
       const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
       const progressBarFull = document.querySelector("#unity-progress-bar-full");
       const spinner = document.querySelector('.spinner');
-
-      const buildUrl = "Build";
-      const loaderUrl = buildUrl + "/184f13270996d700497c5009aa1e564a.loader.js";
-      const config = {
-        dataUrl: buildUrl + "/2b864b6498b4e5e6895953cfbcc06b40.data.unityweb",
-        frameworkUrl: buildUrl + "/8b0baa9999c6d6c873ea2e6d9fa97649.framework.js.unityweb",
-        codeUrl: buildUrl + "/444d2972dd3f75d4e53eba894a3a5bd1.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "do.Games",
-        productName: "Space Waves",
-        productVersion: "1.1.5-ms",
-		matchWebGLToCanvasSize: "false"
-      };
 	  
       loadingCover.style.display = "";
-	  
-	  var gameInstance;
-      var script = document.createElement("script");
+
+      const script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
-		  spinner.style.display = "none";
+          spinner.style.display = "none";
           progressBarEmpty.style.display = "";
-          progressBarFull.style.width = 100 * progress + "%";
+          progressBarFull.style.width = `${100 * progress}%`;
         }).then((unityInstance) => {
 		  console.log("<do.G> Unity inited");
           gameInstance = unityInstance;
           loadingCover.style.display = "none";
-		  resizeCanvas();
-		  loadAds();
-		  
+		
         }).catch((message) => {
           alert(message);
         });
       };
       document.body.appendChild(script);
 	  
-	  // Focus
-  	  function setFocus() {
-  	    container.focus();
-  		window.focus();
-  		canvas.focus();
-  	  }
-
-  	  window.addEventListener("touchstart", () => {
-  	    setFocus();
-  	  });
-  	  window.addEventListener("pointerdown", () => {
-  	    setFocus();
-  	  });
-  	  window.addEventListener("resize", () => {
-  	    setFocus();
-		resizeCanvas();
-  	  });
-	  
-	  function resizeCanvas() {
-		var pixelRatio = window.devicePixelRatio || 1;
-		var width = canvas.clientWidth * pixelRatio;
-		var height = canvas.clientHeight * pixelRatio;
-			
-		if (canvas.width != width || canvas.height != height) {
-			if (height > 1080) {
-				canvas.width = Math.floor(width / height * 1080);
-				canvas.height = 1080;
-			}
-			else
-			{
-				canvas.width = width;
-				canvas.height = height;
-			}
-		}
+	  function setFullscreen() {
+	    gameInstance.SetFullscreen(1);
 	  }
     </script>
-	
-	<script src="https://assets.msn.com/staticsb/statics/latest/msstart-games-sdk/msstart-v1.0.0-rc.19.min.js"></script>
-	
-	<script>
-	
-	  var _interstitialAdInstance = null;
-	  var _rewardedAdInstance = null;
-	  
-	  function loadAds() {
-	    loadInterstitialAd();
-	    loadRewardedAd();
-	  }
-	  
-	  function loadInterstitialAd() {
-	    _interstitialAdInstance = null;
-		
-		$msstart.loadAdsAsync().then(adInstance => {
-		  // Use the adInstance.instanceId to make a call to showAdsAsync
-		  _interstitialAdInstance = adInstance;
-		  console.log("Interstitial ad successfully loaded!");
-	    }).catch(e => {
-		  console.error('<do.G> Error loading interstitial ad. Will retry in 20 seconds...', e);
-		  setTimeout(loadInterstitialAd, 20000);
-		});
-	  }
-	  
-	  function loadRewardedAd() {
-	    _rewardedAdInstance = null;
-		
-		$msstart.loadAdsAsync(true).then(adInstance => {
-		  // Pass in boolean true for the optional parameter isRewardedAd, to fetch Rewarded ads
-		  _rewardedAdInstance = adInstance;
-		  console.log("Rewarded ad successfully loaded!");
-	    }).catch(e => {
-		  console.error('<do.G> Error loading rewarded ad. Will retry in 20 seconds...', e);
-		  setTimeout(loadRewardedAd, 20000);
-		});
-	  }
-	  
-	  async function showInterstitialAd() {
-	    if (_interstitialAdInstance == null) {
-		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
-		  return;
-		}
-		
-		let t;
-		
-		try {
-		  t = await $msstart.showAdsAsync(_interstitialAdInstance.instanceId);
-		} catch (e) {
-		  console.error('<do.G> Error show interstitial ad: ', e);
-		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
-		  loadInterstitialAd();
-		}
-		
-		if (t) {
-		  try {
-		    await t.showAdsCompletedAsync;
-			gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdClose');
-			loadInterstitialAd();
-		  } catch (e) {
-            console.error('<do.G> Error interstitial showAdsCompletedAsync: ', e);
-		    gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
-		    loadInterstitialAd();
-          }
-		}
-	  }
-	  
-	  async function showRewardedAd() {
-	    if (_rewardedAdInstance == null) {
-		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
-		  return;
-		}
-		
-		let t;
-		
-		try {
-		  t = await $msstart.showAdsAsync(_rewardedAdInstance.instanceId);
-		} catch (e) {
-		  console.error('<do.G> Error show rewarded ad: ', e);
-		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
-		  loadRewardedAd();
-		}
-		
-		if (t) {
-		  try {
-		    await t.showAdsCompletedAsync;
-			gameInstance.SendMessage('MSStartSDK', 'OnReward');
-			loadRewardedAd();
-		  } catch (e) {
-            console.error('<do.G> Error rewarded showAdsCompletedAsync: ', e);
-		    gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
-		    loadRewardedAd();
-          }
-		}
-	  }
-	  
-	</script>
-	
+    <script>
+      (function () {
+          const originalAddEventListener = window.addEventListener;
+          const listeners = {};
+  
+          window.addEventListener = function (type, listener, options) {
+              if (type === "touchstart") {
+                  listeners.touchstart = listener;
+              }
+              originalAddEventListener.call(window, type, listener, options);
+          };
+  
+          window.tryRemoveUnityTouchStart = function () {
+              if (listeners.touchstart) {
+                  window.removeEventListener("touchstart", listeners.touchstart);
+                  console.log("touchstart listener removed");
+              } else {
+                  console.warn("No touchstart listener found to remove");
+              }
+          };
+      })();
+        function tryRemoveTouchStartHandler() {
+          window.tryRemoveUnityTouchStart();
+      }
+    window.addEventListener("load", function () {
+          setTimeout(tryRemoveTouchStartHandler, 5000);
+      });
+  </script>
   </body>
 </html>
